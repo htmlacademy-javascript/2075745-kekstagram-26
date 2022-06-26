@@ -1,7 +1,4 @@
-
-export { getRandom, checkLength }
-
-function getRandom(min, max) {
+export function getRandom(min, max) {
   min = Math.round(Math.abs(+min));
   max = Math.round(Math.abs(+max));
   [min, max] = max < min ? [max, min] : [min, max];
@@ -12,7 +9,7 @@ function getRandom(min, max) {
 
 let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
-function getRandomBooking(min, max, numberOfPoints) {
+export function getRandomBooking(min, max, numberOfPoints) {
   const rank = Math.pow(10, numberOfPoints);
   min = Math.round(Math.abs(+min) * rank);
   max = Math.round(Math.abs(+max) * rank);
