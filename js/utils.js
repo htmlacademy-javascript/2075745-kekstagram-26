@@ -21,3 +21,35 @@ function getRandomBooking(min, max, numberOfPoints) {
   console.log(`Min ${min / rank}; Max ${max / rank}`);
   return Math.round(Math.random() * (max - min) + min) / rank;
 }
+
+const getRandomPositiveInteger = (a, b) => {
+  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
+  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
+  const result = Math.random() * (upper - lower + 1) + lower;
+  return Math.floor(result);
+}
+
+const getRandomArrayElement = (elements) => {
+  return elements[getRandomPositiveInteger(0, elements.length - 1)];
+};
+
+const getRandomMessage = (elements) => {
+  return getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)]
+};
+
+const getRandomAvatar = (length) => {
+  return 'img/avatar-' + getRandomPositiveInteger(1, length) + '.svg';
+};
+
+const getRandomNotRepeatInteger = () => {
+  let lastNumbers = [];
+  const MAXINTEGER = 1000;
+  MAXINTEGER += (MAXINTEGER >= lastNumbers.length);
+  let newNumber;
+  do {
+    newNumber = getRandomPositiveInteger(1, MAXINTEGER);
+  }
+  while (!lastNumbers.some(element => element === newNumber));
+  lastNumbers.push(newNumber);
+  return newNumber;
+}
