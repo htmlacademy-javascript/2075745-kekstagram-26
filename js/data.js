@@ -67,9 +67,9 @@ const STANDARDNAME = [
 
 const AVATAR_COUNT = 6;
 
-export const createAuthor = () => {
+export const createAuthor = (id) => {
   return {
-    id: getRandomNotRepeatInteger(),
+    id: id,
     avatar: getRandomAvatar(AVATAR_COUNT),
     message: getRandomMessage(STANDARDMESSAGE),
     name: getRandomArrayElement(STANDARDNAME),
