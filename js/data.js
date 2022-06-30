@@ -67,7 +67,7 @@ const STANDARDNAME = [
 
 const AVATAR_COUNT = 6;
 
-const createAuthor = () => {
+export const createAuthor = () => {
   return {
     id: getRandomNotRepeatInteger(),
     avatar: getRandomAvatar(AVATAR_COUNT),
@@ -75,6 +75,16 @@ const createAuthor = () => {
     name: getRandomArrayElement(STANDARDNAME),
   };
 };
+
+export const createMock = (
+  /*сколько*/length,
+  /*чего*/ factory,
+) => /*возвращает массив*/
+  Array.from({ length }, (_, i) => factory(i));
+
+const PHOTOS_LENGTH = 25;
+const createPhoto = () => { throw new Error('not implemented yet'); }
+export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
 
 // const createWizards = () => Array.from({ length: SIMILAR_WIZARD_COUNT }, createWizard);
 

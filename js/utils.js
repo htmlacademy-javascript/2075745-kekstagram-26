@@ -1,6 +1,3 @@
-
-export { getRandom, checkLength }
-
 function checkInteger(number) {
   if (!isInteger(number)) {
     throw new Error('Число ${number} не integer, не целое');
@@ -28,12 +25,12 @@ function checkValidation(min, max) {
 
 
 
-function getRandom(min, max) {
+export function getRandom(min, max) {
   checkValidation(min, max);
   return Math.round(Math.random() * (max - min + 1) + min);
 }
 
-let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
+export let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
 const getRandomArrayElement = (elements) => {
   return elements[getRandomPositiveInteger(0, elements.length - 1)];
@@ -61,12 +58,4 @@ const getRandomNotRepeatInteger = () => {
   return newNumber;
 }
 
-export const createMock = (
-  /*сколько*/length,
-  /*чего*/ factory,
-) => /*возвращает массив*/
-  Array.from({ length }, (_, i) => factory(i));
 
-const PHOTOS_LENGTH = 25;
-const createPhoto = () => { throw new Error('not implemented yet'); }
-export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
