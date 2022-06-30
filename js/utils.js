@@ -1,33 +1,39 @@
 
 export { getRandom, checkLength }
 
+function checkInteger(number) {
+  if (!isInteger(number)) {
+    throw new Error('Число ${number} не integer, не целое');
+  }
+}
+
+function checkPositive(number) {
+  if (number < 0) {
+    throw new Error('Число ${number} отрицательное');
+  }
+}
+function checkMinMax(left, right) {
+  if (left >= right) {
+    throw new Error('Левый параметр не меньше правого');
+  }
+}
+
+function checkValidation(min, max) {
+  checkInteger(min);
+  checkInteger(max);
+  checkPositive(min);
+  checkPositive(max); // можно и не проверять, потому что есть проверка checkMinMax
+  checkMinMax(min, max);
+}
+
+
+
 function getRandom(min, max) {
-  min = Math.round(Math.abs(+min));
-  max = Math.round(Math.abs(+max));
-  [min, max] = max < min ? [max, min] : [min, max];
-  if (!(min && max)) { return false; };
-  console.log(`Min ${min}; Max ${max}`);
-  return Math.round(Math.random() * (max - min) + min);
+  checkValidation(min, max);
+  return Math.round(Math.random() * (max - min + 1) + min);
 }
 
 let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
-
-function getRandomBooking(min, max, numberOfPoints) {
-  const rank = Math.pow(10, numberOfPoints);
-  min = Math.round(Math.abs(+min) * rank);
-  max = Math.round(Math.abs(+max) * rank);
-  [min, max] = max < min ? [max, min] : [min, max];
-  if (!(min && max)) { return false; };
-  console.log(`Min ${min / rank}; Max ${max / rank}`);
-  return Math.round(Math.random() * (max - min) + min) / rank;
-}
-
-const getRandomPositiveInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
-  const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
-}
 
 const getRandomArrayElement = (elements) => {
   return elements[getRandomPositiveInteger(0, elements.length - 1)];
@@ -42,6 +48,7 @@ const getRandomAvatar = (length) => {
 };
 
 const getRandomNotRepeatInteger = () => {
+  // Зачем что-то мудрить? Надо просто найти максимальный и сделать инкриментацию
   let lastNumbers = [];
   const MAXINTEGER = 1000;
   MAXINTEGER += (MAXINTEGER >= lastNumbers.length);
@@ -53,3 +60,13 @@ const getRandomNotRepeatInteger = () => {
   lastNumbers.push(newNumber);
   return newNumber;
 }
+
+export const createMock = (
+  /*сколько*/length,
+  /*чего*/ factory,
+) => /*возвращает массив*/
+  Array.from({ length }, (_, i) => factory(i));
+
+const PHOTOS_LENGTH = 25;
+const createPhoto = () => { throw new Error('not implemented yet'); }
+export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
