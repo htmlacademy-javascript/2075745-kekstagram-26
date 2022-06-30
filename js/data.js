@@ -76,16 +76,12 @@ export const createAuthor = () => {
   };
 };
 
-export const createMock = (
-  /*сколько*/length,
-  /*чего*/ factory,
-) => /*возвращает массив*/
-  Array.from({ length }, (_, i) => factory(i));
+export const createMock = (length, factory,) =>
+  Array.from({ length }, (_, i) => createAuthor(i));
 
 const PHOTOS_LENGTH = 25;
 const createPhoto = () => { throw new Error('not implemented yet'); }
 export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
+console.log(mockPublishedPhotos);
 
-// const createWizards = () => Array.from({ length: SIMILAR_WIZARD_COUNT }, createWizard);
-
-export { createWizards };
+// export const createAutors = () => Array.from({ length: PHOTOS_LENGTH }, createAuthor);
