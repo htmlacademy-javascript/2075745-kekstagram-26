@@ -1,5 +1,5 @@
 import { getRandom, checkLength } from './utils.js';
-import { createAuthoe, createMock } from './data.js';
+import { createAuthor, createMock, createAuthors } from './data.js';
 
 const post = {
   id: 1,

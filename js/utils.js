@@ -19,13 +19,10 @@ function checkValidation(min, max) {
   checkInteger(min);
   checkInteger(max);
   checkPositive(min);
-  checkPositive(max); // можно и не проверять, потому что есть проверка checkMinMax
   checkMinMax(min, max);
 }
 
-
-
-export function getRandom(min, max) {
+export function getRandomPositiveInteger(min, max) {
   checkValidation(min, max);
   return Math.round(Math.random() * (max - min + 1) + min);
 }
@@ -61,4 +58,21 @@ export const displayElementAdd = (container, selector, className) => {
   setCss(findElement(container, selector), className);
 };
 
+export const createCounter = (start = 0, step = 1) => {
+  let counter = start;
+  return (
+    {
+      inc: () => {
+        let result = counter;
+        counter += step;
+        return result;
+      },
+      dec: () => {
+        let result = counter;
+        counter -= step;
+        return result;
+      },
+      value: () => counter,
+    });
 
+}

@@ -1,4 +1,4 @@
-import { getRandomArrayElement } from './util.js';
+// import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './util.js';
 
 const STANDARDMESSAGE = [
   "Всё отлично!",
@@ -67,21 +67,28 @@ const STANDARDNAME = [
 
 const AVATAR_COUNT = 6;
 
-export const createAuthor = (id) => {
+const idAuthor = createCounter(135, 1).inc;
+export const createAuthor = () => {
   return {
-    id: id,
+    id: idAuthor(),
     avatar: getRandomAvatar(AVATAR_COUNT),
     message: getRandomMessage(STANDARDMESSAGE),
     name: getRandomArrayElement(STANDARDNAME),
   };
 };
 
-export const createMock = (length, factory,) =>
-  Array.from({ length }, (_, i) => createAuthor(i));
+// export const createMock = (length, factory,) =>
+//   Array.from({ length }, (_, i) => createAuthor(i));
 
 const PHOTOS_LENGTH = 25;
-const createPhoto = () => { throw new Error('not implemented yet'); }
-export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
-console.log(mockPublishedPhotos);
+// const createPhoto = () => {
+//   // throw new Error('not implemented yet');
+//   for (let i = 0; i < PHOTOS_LENGTH; i++) {
+//     createAuthor();
+//   }
+// }
+// export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
+// console.log(mockPublishedPhotos);
 
-// export const createAutors = () => Array.from({ length: PHOTOS_LENGTH }, createAuthor);
+export const createAuthors = Array.from({ length: PHOTOS_LENGTH }, createAuthor); //() =>
+console.log(createAuthors);
