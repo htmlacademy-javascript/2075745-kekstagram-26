@@ -1,5 +1,5 @@
 function checkInteger(number) {
-  if (!isInteger(number)) {
+  if (!Number.isInteger(number)) {
     throw new Error('Число ${number} не integer, не целое');
   }
 }
@@ -29,15 +29,15 @@ export function getRandomPositiveInteger(min, max) {
 
 export let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
-const getRandomArrayElement = (elements) => {
+export const getRandomArrayElement = (elements) => {
   return elements[getRandomPositiveInteger(0, elements.length - 1)];
 };
 
-const getRandomMessage = (elements) => {
+export const getRandomMessage = (elements) => {
   return getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)]
 };
 
-const getRandomAvatar = (length) => {
+export const getRandomAvatar = (length) => {
   return 'img/avatar-' + getRandomPositiveInteger(1, length) + '.svg';
 };
 

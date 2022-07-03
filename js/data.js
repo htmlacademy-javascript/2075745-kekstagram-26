@@ -1,4 +1,4 @@
-// import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './util.js';
+import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './util.js';
 
 const STANDARDMESSAGE = [
   "Всё отлично!",
@@ -83,9 +83,6 @@ export const createAuthor = () => {
 const PHOTOS_LENGTH = 25;
 // const createPhoto = () => {
 //   // throw new Error('not implemented yet');
-//   for (let i = 0; i < PHOTOS_LENGTH; i++) {
-//     createAuthor();
-//   }
 // }
 // export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
 // console.log(mockPublishedPhotos);
