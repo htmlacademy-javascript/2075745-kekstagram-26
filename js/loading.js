@@ -1,23 +1,25 @@
 import { findElement, getRandomArrayElement } from './utils.js';
 import { createAuthors } from './data.js';
 
+
+console.log('Loading...');
 const template = findElement(document, '#picture');
-console.log(template);
-const template2 = findElement(template.content, '.picture');
-console.log(template2);
+const templatePicture = findElement(template.content, '.picture');
 const templatePictureFragment = document.createDocumentFragment();
 
 createAuthors.forEach(({ url, comments, likes }) => {
-  const photosElement = template2.cloneNode(true);
+  const photosElement = templatePicture.cloneNode(true);
   const pictureImg = findElement(photosElement, '.picture__img');
   pictureImg.src = url;
   const pictureComments = findElement(photosElement, '.picture__comments');
-  pictureComments.content.value = comments.length; // ? надо будет потом целый объект засунуть, массив объектов
+  pictureComments.textContent = comments.length; // ? надо будет потом целый объект засунуть, массив объектов
   const pictureLikes = findElement(photosElement, '.picture__likes');
-  pictureLikes.content.value = likes;
+  pictureLikes.textContent = likes;
+  templatePictureFragment.appendChild(photosElement);
 }
 );
-
+const loadingPictures = findElement(document, '.pictures')
+loadingPictures.appendChild(templatePictureFragment);
 
 // Найти  шаблон <template id="picture">
 //Создать элемент

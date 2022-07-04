@@ -1,5 +1,20 @@
-import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './util.js';
+import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './utils.js';
 import { getRandomPhoto, getRandomPositiveInteger } from './utils.js';
+
+const post = {
+  id: 1,
+  url: "",
+  description: "",
+  likes: 15,
+  comments: [],
+};
+
+const comment = {
+  id: 135,
+  avatar: 'img/avatar-6.svg',
+  message: 'В целом всё неплохо. Но не всё.',
+  name: 'Артём',
+};
 
 const STANDARDMESSAGE = [
   "Всё отлично!",
@@ -84,7 +99,7 @@ export const createAuthor = () => {
   return {
     id: idPhoto(),
     url: getRandomPhoto(PHOTOS_LENGTH),
-    description: getRandomArrayElement(PHOTOS_LENGTH),
+    description: getRandomArrayElement(STANDARDDESCRIPTION),
     likes: getRandomPositiveInteger(15, 200),
     comments: [].push(createComment()), // ? создать несколько комментариев к фотографии
   };

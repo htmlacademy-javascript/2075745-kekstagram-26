@@ -1,17 +1,20 @@
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
-    throw new Error('Число ${number} не integer, не целое');
+    console.log('Число ${number} не integer, не целое');
+    // throw new Error('Число ${number} не integer, не целое');
   }
 }
 
 function checkPositive(number) {
   if (number < 0) {
-    throw new Error('Число ${number} отрицательное');
+    console.log('Число ${number} отрицательное');
+    // throw new Error('Число ${number} отрицательное');
   }
 }
 function checkMinMax(left, right) {
   if (left >= right) {
-    throw new Error('Левый параметр не меньше правого');
+    console.log('Левый параметр не меньше правого');
+    // throw new Error('Левый параметр не меньше правого');
   }
 }
 
@@ -24,7 +27,7 @@ function checkValidation(min, max) {
 
 export function getRandomPositiveInteger(min, max) {
   checkValidation(min, max);
-  return Math.round(Math.random() * (max - min + 1) + min);
+  return Math.round(Math.random() * (max - min) + min);
 }
 
 export let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
