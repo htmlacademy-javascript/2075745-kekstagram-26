@@ -95,13 +95,24 @@ const createComment = () => {
   }
 };
 
+const MAX_COUNT_COMMENTS = 5;
+const newComment = () => {
+  const arr = [];
+  const countComments = getRandomPositiveInteger(1, MAX_COUNT_COMMENTS);
+  for (let i = 1; i <= countComments; i++) {
+    const newElement = createComment();
+    arr.push(newElement);
+  }
+  return arr;
+};
+
 export const createAuthor = () => {
   return {
     id: idPhoto(),
     url: getRandomPhoto(PHOTOS_LENGTH),
     description: getRandomArrayElement(STANDARDDESCRIPTION),
     likes: getRandomPositiveInteger(15, 200),
-    comments: [].push(createComment()), // ? создать несколько комментариев к фотографии
+    comments: newComment(),
   };
 };
 

@@ -1,8 +1,6 @@
 import { findElement, getRandomArrayElement } from './utils.js';
 import { createAuthors } from './data.js';
 
-
-console.log('Loading...');
 const template = findElement(document, '#picture');
 const templatePicture = findElement(template.content, '.picture');
 const templatePictureFragment = document.createDocumentFragment();
@@ -12,7 +10,7 @@ createAuthors.forEach(({ url, comments, likes }) => {
   const pictureImg = findElement(photosElement, '.picture__img');
   pictureImg.src = url;
   const pictureComments = findElement(photosElement, '.picture__comments');
-  pictureComments.textContent = comments.length; // ? надо будет потом целый объект засунуть, массив объектов
+  pictureComments.textContent = comments.length;
   const pictureLikes = findElement(photosElement, '.picture__likes');
   pictureLikes.textContent = likes;
   templatePictureFragment.appendChild(photosElement);
