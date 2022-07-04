@@ -1,4 +1,4 @@
-import { findElement, getRandomArrayElement } from './utils.js';
+import { findElement } from './utils.js';
 import { createAuthors } from './data.js';
 
 const template = findElement(document, '#picture');
@@ -16,7 +16,7 @@ createAuthors.forEach(({ url, comments, likes }) => {
   templatePictureFragment.appendChild(photosElement);
 }
 );
-const loadingPictures = findElement(document, '.pictures')
+const loadingPictures = findElement(document, '.pictures');
 loadingPictures.appendChild(templatePictureFragment);
 
 // Найти  шаблон <template id="picture">
