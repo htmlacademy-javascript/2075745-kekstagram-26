@@ -87,5 +87,6 @@ const PHOTOS_LENGTH = 25;
 // export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
 // console.log(mockPublishedPhotos);
 
+// Хоть что-то изменить для pull request
 export const createAuthors = Array.from({ length: PHOTOS_LENGTH }, createAuthor); //() =>
 console.log(createAuthors);
