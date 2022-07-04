@@ -37,6 +37,10 @@ export const getRandomMessage = (elements) => {
   return getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)]
 };
 
+export const getRandomPhoto = (length) => {
+  return 'photos/' + getRandomPositiveInteger(1, length) + '.jpg';
+}
+
 export const getRandomAvatar = (length) => {
   return 'img/avatar-' + getRandomPositiveInteger(1, length) + '.svg';
 };
@@ -47,7 +51,7 @@ const setCss = (htmlElement, className) => {
   }
   htmlElement.classList.add(className);
 };
-const findElement = (container, selector) => {
+export const findElement = (container, selector) => {
   if (container === null) {
     return null;
   }
