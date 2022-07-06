@@ -1,21 +1,6 @@
 import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './utils.js';
 import { getRandomPhoto, getRandomPositiveInteger } from './utils.js';
 
-const post = {
-  id: 1,
-  url: '',
-  description: '',
-  likes: 15,
-  comments: [],
-};
-
-const comment = {
-  id: 135,
-  avatar: 'img/avatar-6.svg',
-  message: 'В целом всё неплохо. Но не всё.',
-  name: 'Артём',
-};
-
 const STANDARDMESSAGE = [
   'Всё отлично!',
   'В целом всё неплохо.Но не всё.',
@@ -85,9 +70,9 @@ const PHOTOS_LENGTH = 25;
 const AVATAR_COUNT = 6;
 
 const idAuthor = createCounter(135, 1).inc;
-const idPhoto = createCounter(1, 1).inc;
+const idPost = createCounter(1, 1).inc;
 
-const createComment = function () {
+const createSingleComment = function () {
   return {
     id: idAuthor(),
     avatar: getRandomAvatar(AVATAR_COUNT),
@@ -97,23 +82,24 @@ const createComment = function () {
 };
 
 const MAX_COUNT_COMMENTS = 5;
-const newComment = function () {
+const createComments = function () {
   const arr = [];
   const countComments = getRandomPositiveInteger(1, MAX_COUNT_COMMENTS);
   for (let i = 1; i <= countComments; i++) {
-    const newElement = createComment();
+    const newElement = createSingleComment();
     arr.push(newElement);
   }
   return arr;
 };
 
-export const createAuthor = function () {
+export const createSinglePost = function () {
   return {
-    id: idPhoto(),
+    id: idPost(),
+    avatar: getRandomAvatar(AVATAR_COUNT),
     url: getRandomPhoto(PHOTOS_LENGTH),
     description: getRandomArrayElement(STANDARDDESCRIPTION),
     likes: getRandomPositiveInteger(15, 200),
-    comments: newComment(),
+    comments: createComments(),
   };
 };
 
@@ -127,4 +113,5 @@ export const createAuthor = function () {
 // export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
 // console.log(mockPublishedPhotos);
 
-export const createAuthors = Array.from({ length: PHOTOS_LENGTH }, createAuthor); //() =>
+export const createPosts = Array.from({ length: PHOTOS_LENGTH }, createSinglePost); //() =>
+export const com = (i) => createPosts[i - 1];

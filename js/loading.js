@@ -1,14 +1,17 @@
 import { findElement } from './utils.js';
-import { createAuthors } from './data.js';
+import { createPosts } from './data.js';
+import { openModal } from './picture.js';
 
 const template = findElement(document, '#picture');
 const templatePicture = findElement(template.content, '.picture');
 const templatePictureFragment = document.createDocumentFragment();
 
-createAuthors.forEach(({ url, comments, likes }) => {
+createPosts.forEach(({ id, url, description, comments, likes }) => {
   const photosElement = templatePicture.cloneNode(true);
+  photosElement.id = `picture-${id}`;
   const pictureImg = findElement(photosElement, '.picture__img');
   pictureImg.src = url;
+  pictureImg.alt = description;
   const pictureComments = findElement(photosElement, '.picture__comments');
   pictureComments.textContent = comments.length;
   const pictureLikes = findElement(photosElement, '.picture__likes');
@@ -19,26 +22,15 @@ createAuthors.forEach(({ url, comments, likes }) => {
 const loadingPictures = findElement(document, '.pictures');
 loadingPictures.appendChild(templatePictureFragment);
 
-// ? Где-то ещё надо добавить EventListener на каждую картинку
-
-// Найти  шаблон <template id="picture">
-//Создать элемент
-// src = url
-// class="picture__likes" = likes
-// class="picture__comments" = comments
-// Добавить в DOM
-// DocumentFragment
-
-// Отобразить фотографии других пользователей.
-
-//     Заведите модуль, который будет отвечать за отрисовку миниатюр.
-
-//     На основе временных данных для разработки и шаблона #picture создайте DOM - элементы, соответствующие фотографиям, и заполните их данными:
-//         Адрес изображения url подставьте как атрибут src изображения.
-//         Количество лайков likes выведите в блок.picture__likes.
-//         Количество комментариев comments выведите в блок.picture__comments.
-
-//     Отрисуйте сгенерированные DOM - элементы в блок.pictures.Для вставки элементов используйте DocumentFragment.
-
-//     Подключите модуль в проект.
-
+loadingPictures.onclick = function (evt) {
+  if (evt.target.tagName === 'IMG') {
+    const image = {
+      id: evt.target.parentElement.id,
+      src: evt.target.src,
+      alt: evt.target.alt,
+      comments: evt.target.nextElementSibling.firstElementChild.textContent,
+      likes: evt.target.nextElementSibling.lastElementChild.textContent,
+    };
+    openModal(image);
+  }
+};

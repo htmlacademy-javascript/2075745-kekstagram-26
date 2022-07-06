@@ -1,4 +1,5 @@
 import { findElement, isEnterKey, isEscapeKey } from './utils.js';
+import { com } from './data.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
@@ -7,9 +8,17 @@ const closeWindow = findElement(modalWindow, '.big-picture__cancel');
 
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
+const likesCount = findElement(modalWindow, '.likes-count');
+const commentsCount = findElement(modalWindow, '.comments-count');
+const socialComment = findElement(modalWindow, '.social__comment-count');
+const commentsLoader = findElement(modalWindow, '.comments-loader');
+
+const socialHeader = findElement(modalWindow, '.social__header');
+const socialPicture = findElement(socialHeader, '.social__picture');
+const socialCaption = findElement(socialHeader, '.social__caption');
+const socialLikes = findElement(socialHeader, '.likes-count');
 
 // templatePicture.addEventListener('click', openModal);
-
 
 const onModalEscKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -18,12 +27,12 @@ const onModalEscKeyDown = (evt) => {
   }
 };
 
-function openModal() {
+export function openModal(image) {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
-  renderPicture();
-  modalWindow.addEventListener('keydown', onModalEscKeyDown);
+  renderPicture(image);
+  body.addEventListener('keydown', onModalEscKeyDown);
 };
 
 function closeModal() {
@@ -31,25 +40,28 @@ function closeModal() {
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
   // надо ли чистить что-то за собой ? анти rendererPicture
-  modalWindow.removeEventListener('keydown', onModalEscKeyDown);
+  body.removeEventListener('keydown', onModalEscKeyDown);
 };
 
-function renderPicture() {
+function renderPicture(image) {
   // временная штука
   // 3. После открытия окна спрячьте блоки счётчика комментариев.social__comment - count и загрузки новых комментариев.comments - loader, добавив им класс hidden, с ними мы разберёмся позже, в другом домашнем задании.
-  const socialComment = find(modalWindow, '.social__comment-count');
   socialComment.classList.add('hidden');
-  const commentsLoader = find(modalWindow, '.comments-loader');
   commentsLoader.classList.add('hidden');
+  // ? Вывод комментариев в большом окне
 
   // перерисовка новой картинки
   const img = findElement(pictureImg, 'img');
-  // img.src = '';
-  img.alt = 'описание';
-  const likesCount = findElement(modalWindow, '.likes-count');
-  likesCount.textContent = 25;
-  const commentsCount = findElement(modalWindow, '.comments-count');
-  commentsCount.textContent = 120;
+  img.src = image.src;
+  img.alt = image.alt;
+  likesCount.textContent = image.likes;
+  commentsCount.textContent = image.comments;
+  const id = image.id.slice(('picture-').length);
+  socialPicture.src = com(id).avatar;
+  socialCaption.textContent = com(id).description;
+  socialLikes.textContent = com(id).likes;
+
+
   // const socialComments = findElement(modalWindow, '.social__comments');
 };
 
@@ -93,5 +105,3 @@ pictureCancel.addEventListener('keydown', () => {
 // А первое — с третьим модулем — более сложное из - за отсутствия примера, но самостоятельное.
 // В качестве третьего модуля можно выбрать точку входа, а можно завести отдельный модуль, например «Галерея». Решение за вами.
 
-const picture = findElement(document, 'picture');
-openModal();
