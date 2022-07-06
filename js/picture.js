@@ -4,7 +4,7 @@ import { com } from './data.js';
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
 // const openWindow = document.querySelector('.setup-open');
-const closeWindow = findElement(modalWindow, '.big-picture__cancel');
+const buttonCloseWindow = findElement(modalWindow, '.big-picture__cancel');
 
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
@@ -33,7 +33,7 @@ export function openModal(image) {
   body.classList.add('modal-open');
   renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
-};
+}
 
 function closeModal() {
   modalWindow.classList.add('hidden');
@@ -41,7 +41,7 @@ function closeModal() {
   body.classList.remove('modal-open');
   // надо ли чистить что-то за собой ? анти rendererPicture
   body.removeEventListener('keydown', onModalEscKeyDown);
-};
+}
 
 function renderPicture(image) {
   // временная штука
@@ -63,15 +63,15 @@ function renderPicture(image) {
 
 
   // const socialComments = findElement(modalWindow, '.social__comments');
-};
+}
 
 pictureCancel.addEventListener('click', () => {
   closeModal();
 });
 
-pictureCancel.addEventListener('keydown', () => {
+buttonCloseWindow.addEventListener('keydown', (evt) => {
   if (isEnterKey(evt)) {
-    closeWindow();
+    closeModal();
   }
 });
 
