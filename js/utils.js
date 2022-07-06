@@ -80,3 +80,11 @@ export const createCounter = (start = 0, step = 1) => {
     });
 
 };
+
+export const isEscapeKey = (evt) => {
+  return evt.key === 'Escape';
+};
+
+export const isEnterKey = (evt) => {
+  return evt.key === 'Enter';
+};

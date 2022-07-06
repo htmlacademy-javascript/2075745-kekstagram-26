@@ -19,6 +19,8 @@ createAuthors.forEach(({ url, comments, likes }) => {
 const loadingPictures = findElement(document, '.pictures');
 loadingPictures.appendChild(templatePictureFragment);
 
+// ? Где-то ещё надо добавить EventListener на каждую картинку
+
 // Найти  шаблон <template id="picture">
 //Создать элемент
 // src = url
