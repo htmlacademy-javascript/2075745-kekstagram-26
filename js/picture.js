@@ -4,7 +4,6 @@ import { post } from './data.js';
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
 // const openWindow = document.querySelector('.setup-open');
-const buttonCloseWindow = findElement(modalWindow, '.big-picture__cancel');
 
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
@@ -85,7 +84,7 @@ pictureCancel.addEventListener('click', () => {
   closeModal();
 });
 
-buttonCloseWindow.addEventListener('keydown', (evt) => {
+pictureCancel.addEventListener('keydown', (evt) => {
   if (isEnterKey(evt)) {
     closeModal();
   }

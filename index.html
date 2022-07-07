@@ -19,7 +19,8 @@
     <!-- Фильтрация изображений от других пользователей -->
     <section class="img-filters  img-filters--inactive  container">
       <h2 class="img-filters__title  visually-hidden">Фильтр фотографий</h2>
-      <form class="img-filters__form" action="index.html" method="get" autocomplete="off">
+      <form class="img-filters__form" action="index.html" method="post" enctype="multipart/form-data"
+        action="https://26.javascript.pages.academy/kekstagram" autocomplete="off">
         <button type=button class="img-filters__button  img-filters__button--active" id="filter-default">По
           умолчанию</button>
         <button type=button class="img-filters__button" id="filter-random">Случайные</button>
@@ -129,10 +130,13 @@
                 <!-- Добавление хэш-тегов и комментария к изображению -->
                 <fieldset class="img-upload__text text">
                   <div class="img-upload__field-wrapper">
-                    <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
+                    <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег" type="text" minlength="2"
+                      maxlength="25" data-pristine-minlength-message="хеш-тег не может состоять только из одной решётки"
+                      data-pristine-maxlength-message="максимальная длина одного хэш-тега 20 символов, включая решётку">
                   </div>
                   <div class="img-upload__field-wrapper">
-                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..."></textarea>
+                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..."
+                      maxlength="140"></textarea>
                   </div>
                 </fieldset>
 
