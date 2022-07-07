@@ -115,3 +115,6 @@ export const createSinglePost = function () {
 
 export const createPosts = Array.from({ length: PHOTOS_LENGTH }, createSinglePost); //() =>
 export const post = (i) => createPosts[i - 1];
+
+const re = /^#[A - Za - zА - Яа - яЁе0 - 9]{ 1, 19 } $/;
+console.log(re.test('#fdsf0df'));
