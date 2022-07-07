@@ -1,20 +1,18 @@
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
-    console.log('Число ${number} не integer, не целое');
-    // throw new Error('Число ${number} не integer, не целое');
+
+    throw new Error(`Число ${number} не integer, не целое`);
   }
 }
 
 function checkPositive(number) {
   if (number < 0) {
-    console.log('Число ${number} отрицательное');
-    // throw new Error('Число ${number} отрицательное');
+    throw new Error(`Число ${number} отрицательное`);
   }
 }
 function checkMinMax(left, right) {
   if (left >= right) {
-    console.log('Левый параметр не меньше правого');
-    // throw new Error('Левый параметр не меньше правого');
+    throw new Error('Левый параметр не меньше правого');
   }
 }
 
@@ -30,23 +28,22 @@ export function getRandomPositiveInteger(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-export let checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
+export const checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
-export const getRandomArrayElement = (elements) => {
-  return elements[getRandomPositiveInteger(0, elements.length - 1)];
+export const getRandomArrayElement = (elements) =>
+  elements[getRandomPositiveInteger(0, elements.length - 1)];
+
+export const getRandomMessage = (elements) =>
+  getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)];
+
+export const getRandomPhoto = function (length) {
+  return `photos/${getRandomPositiveInteger(1, length)}.jpg`;
 };
 
-export const getRandomMessage = (elements) => {
-  return getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)]
+export const getRandomAvatar = function (length) {
+  return `img/avatar-${getRandomPositiveInteger(1, length)}.svg`;
 };
 
-export const getRandomPhoto = (length) => {
-  return 'photos/' + getRandomPositiveInteger(1, length) + '.jpg';
-}
-
-export const getRandomAvatar = (length) => {
-  return 'img/avatar-' + getRandomPositiveInteger(1, length) + '.svg';
-};
 
 const setCss = (htmlElement, className) => {
   if (htmlElement === null) {
@@ -70,16 +67,20 @@ export const createCounter = (start = 0, step = 1) => {
   return (
     {
       inc: () => {
-        let result = counter;
+        const result = counter;
         counter += step;
         return result;
       },
       dec: () => {
-        let result = counter;
+        const result = counter;
         counter -= step;
         return result;
       },
       value: () => counter,
     });
 
-}
+};
+
+export const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export const isEnterKey = (evt) => evt.key === 'Enter';
