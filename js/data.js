@@ -114,4 +114,4 @@ export const createSinglePost = function () {
 // console.log(mockPublishedPhotos);
 
 export const createPosts = Array.from({ length: PHOTOS_LENGTH }, createSinglePost); //() =>
-export const com = (i) => createPosts[i - 1];
+export const post = (i) => createPosts[i - 1];
