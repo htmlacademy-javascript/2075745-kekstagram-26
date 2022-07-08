@@ -6,29 +6,27 @@ uploadFile.addEventListener('change', openModal);
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
-const form = findElement(document, '.upload-select-image');
-const pristine = new Pristine(form);
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    console.log('Норма');
-  }
-  else {
-    console.log('Не валидна');
-  }
-});
+// const form = findElement(document, '.upload-select-image');
+// const pristine = new Pristine(form);
+// form.addEventListener('submit', (evt) => {
+//   evt.preventDefault();
+//   const isValid = pristine.validate();
+//   if (isValid) {
+//     console.log('Норма');
+//   }
+//   else {
+//     console.log('Не валидна');
+//   }
+// });
 
-const hashtagsField = findElement(document, '.text__hashtags');
-hashtagsField.addEventListener('keydown', (evt) => {
-  if (isEscapeKey) {
-    evt.stopPropagation();
-  }
-});
-const descriptionField = findElement(document, '.text__description');
-descriptionField.addEventListener('keydown', event.stopPropagation());
-
-
+// const hashtagsField = findElement(document, '.text__hashtags');
+// hashtagsField.addEventListener('keydown', (evt) => {
+//   if (isEscapeKey) {
+//     evt.stopPropagation();
+//   }
+// });
+// const descriptionField = findElement(document, '.text__description');
+// descriptionField.addEventListener('keydown', event.stopPropagation());
 
 // __________________ Повтор кода picture.js
 // о чем говорится в задании
@@ -43,7 +41,7 @@ const onModalEscKeyDown = (evt) => {
 };
 
 // ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
-export function openModal(image) {
+export function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');

@@ -1,4 +1,4 @@
-import { findElement, isEnterKey, isEscapeKey } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
 import { post } from './data.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
@@ -8,15 +8,13 @@ const modalWindow = findElement(document, '.big-picture'); // само окно
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
 const likesCount = findElement(modalWindow, '.likes-count');
-const socialComment = findElement(modalWindow, '.social__comment-count');
+const socialCommentCount = findElement(modalWindow, '.social__comment-count');
 const commentsLoader = findElement(modalWindow, '.comments-loader');
 
 const socialHeader = findElement(modalWindow, '.social__header');
 const socialPicture = findElement(socialHeader, '.social__picture');
 const socialCaption = findElement(socialHeader, '.social__caption');
 const socialLikes = findElement(socialHeader, '.likes-count');
-
-const socialComments = findElement(document, '.social__comments');
 
 // templatePicture.addEventListener('click', openModal);
 
@@ -55,34 +53,44 @@ function closeModal() {
 //  иначе (комментариев больше 5): открываю пять комментариев, кнопка открыта, число показанных комментариев += 5
 let countShownComments = 0;
 
-function show5Comments(id) {
-  const sumComments = post(id).comments.length;
-  const difference = sumComments - countShownComments;
-  if (difference <= 0) {
-    console.log('Нечего показывать');
-  } else {
-    if (difference <= 5) {
-      console.log('Показать оставшиеся ' + difference);
-      const socialComments = findElement(document, '.social__comments');
-      for (let i = countShownComments; i < sumComments - 1; i++) {
-        socialComments.childNodes[i].classList.remove('hidden');
+const STEP_SHOW_COMMENTS = 5;
+function show5Comments() {
+  const commentsCount = findElement(modalWindow, '.comments-count');
+  const sumComments = +commentsCount.textContent;
+  const socialComments = findElement(document, '.social__comments');
+  if (sumComments - countShownComments <= 0) {
+    for (let i = 0; i < socialComments.children.length; i++) {
+      socialComments.children[i].classList.add('hidden');
+    }
+    commentsLoader.classList.add('hidden');
+  }
+  else {
+    if (sumComments - countShownComments <= STEP_SHOW_COMMENTS) {
+      for (let i = countShownComments; i < sumComments; i++) {
+        socialComments.children[i].classList.remove('hidden');
       }
       countShownComments = sumComments;
       commentsLoader.classList.add('hidden');
-    } else {
-      console.log('Показать 5 из ' + difference);
+    }
+    else {
       for (let i = countShownComments; i < countShownComments + 5; i++) {
-        socialComments.childNodes[i - 1].classList.remove('hidden');
+        socialComments.children[i].classList.remove('hidden');
       }
-      countShownComments += 5;
+      countShownComments += STEP_SHOW_COMMENTS;
       commentsLoader.classList.remove('hidden');
-    };
+    }
   }
-  let strTemp = socialComment.textContent;
-  strTemp = strTemp.slice(strTemp.indexOf(' из'));
-  socialComment.textContent = countShownComments + strTemp;
+
+  let strTemp = socialCommentCount.innerHTML;
+  let j = 0;
+  while (isCharNumber(strTemp[j])) {
+    j++;
+  }
+  strTemp = strTemp.slice(j);
+  socialCommentCount.innerHTML = countShownComments + strTemp;
 }
-commentsLoader.addEventListener('click', show5Comments); // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
+commentsLoader.onclick = show5Comments;
+// addEventListener('click', show5Comments); // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
 
 function renderPicture(image) {
   // перерисовка новой картинки
@@ -91,19 +99,19 @@ function renderPicture(image) {
   img.alt = image.alt;
   likesCount.textContent = image.likes;
   const commentsCount = findElement(modalWindow, '.comments-count');
-  console.log(commentsCount);
   commentsCount.textContent = image.comments;
   const id = image.id.slice(('picture-').length);
   socialPicture.src = post(id).avatar;
   socialCaption.textContent = post(id).description;
   socialLikes.textContent = post(id).likes;
 
-
+  const socialComments = findElement(document, '.social__comments');
   const oneSocialComment = findElement(socialComments, '.social__comment');
   const templateCommentFragment = document.createDocumentFragment();
 
   post(id).comments.forEach((comments) => {
     const templateSocialComment = oneSocialComment.cloneNode(true);
+    templateSocialComment.classList.add('hidden');
     const avatar = findElement(templateSocialComment, '.social__picture');
     avatar.src = comments.avatar;
     avatar.alt = comments.name;
@@ -112,13 +120,17 @@ function renderPicture(image) {
     templateCommentFragment.appendChild(templateSocialComment);
   });
 
-  // Что-то перестала роботать кнопка escape после одного закрытия
+
+  // Что-то перестала работать кнопка escape после одного закрытия
   // Удаление всех дочерних элементов
-  while (socialComments.firstChild) {
-    socialComments.removeChild(socialComments.firstChild);
+  if (post(id).comments.length) {
+    while (socialComments.firstChild) {
+      socialComments.removeChild(socialComments.firstChild);
+    }
+    socialComments.appendChild(templateCommentFragment);
   }
-  socialComments.appendChild(templateCommentFragment);
-  show5Comments(id);
+  countShownComments = 0;
+  show5Comments();
 }
 
 pictureCancel.addEventListener('click', () => {

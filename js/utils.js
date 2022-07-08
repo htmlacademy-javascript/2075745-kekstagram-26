@@ -84,3 +84,5 @@ export const createCounter = (start = 0, step = 1) => {
 export const isEscapeKey = (evt) => evt.key === 'Escape';
 
 export const isEnterKey = (evt) => evt.key === 'Enter';
+
+export const isCharNumber = (char) => (char >= '0' && char <= '9');
