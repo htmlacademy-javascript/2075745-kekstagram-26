@@ -81,7 +81,7 @@ const createSingleComment = function () {
   };
 };
 
-const MAX_COUNT_COMMENTS = 5;
+const MAX_COUNT_COMMENTS = 25;
 const createComments = function () {
   const arr = [];
   const countComments = getRandomPositiveInteger(0, MAX_COUNT_COMMENTS);
