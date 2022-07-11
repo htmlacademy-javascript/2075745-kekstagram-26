@@ -6,27 +6,109 @@ uploadFile.addEventListener('change', openModal);
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
-// const form = findElement(document, '.upload-select-image');
-// const pristine = new Pristine(form);
-// form.addEventListener('submit', (evt) => {
-//   evt.preventDefault();
-//   const isValid = pristine.validate();
-//   if (isValid) {
-//     console.log('Норма');
-//   }
-//   else {
-//     console.log('Не валидна');
-//   }
+const form = findElement(document, '.upload-select-image');
+const pristine = new Pristine(form);
+
+// const pristine = new Pristine(form, {
+//   classTo: 'setup-wizard-form__element',
+//   errorTextParent: 'setup-wizard-form__element',
+//   errorTextClass: 'setup-wizard-form__error-text',
 // });
 
-// const hashtagsField = findElement(document, '.text__hashtags');
-// hashtagsField.addEventListener('keydown', (evt) => {
-//   if (isEscapeKey) {
-//     evt.stopPropagation();
-//   }
-// });
-// const descriptionField = findElement(document, '.text__description');
-// descriptionField.addEventListener('keydown', event.stopPropagation());
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  if (isValid) {
+    console.log('Норма');
+  }
+  else {
+    console.log('Не валидна');
+  }
+});
+
+// ______
+
+function validateHashtags(str) {
+  const arr = [];
+  const MAX_COUNT_HASHTAGS = 5;
+
+  const target = '#'; // цель поиска
+  let position = 0;
+  let foundPos = -2;
+  foundPos = str.indexOf(target, position);
+  while (foundPos !== -1) {
+    position = foundPos + 1; // продолжаем со следующей позиции
+    foundPos = str.indexOf(target, position);
+    arr.push(str.slice(position, (foundPos !== -1) ? foundPos : str.length));
+  }
+  if (arr.length === 0) {
+    return '# не найден';
+  }
+  console.log(arr);
+  console.log('Проверка на # пройдена');
+  if (arr.length > MAX_COUNT_HASHTAGS) {
+    return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
+  }
+  console.log('Проверка на количество хештегов пройдена');
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i].slice(-1) !== ' ') {
+      return 'Пробел не найден';
+    }
+  }
+
+  for (let i = 0; i < arr.length; i++) {
+    while ((arr[i].slice(-1) === ' ')) {
+      arr[i] = arr[i].slice(0, -1);
+    }
+  }
+  console.log('Пробелы в конце тегов удалены');
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].length < 1) {
+      return 'Тег состоит только из #';
+    }
+    if (arr[i].length > 19) {
+      return 'Длина тега больше 20, включая #';
+    }
+  }
+  console.log('Проверка на длину тегов пройдена');
+
+  for (let i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].toLowerCase();
+  }
+  const test = arr.filter(function (elem, pos, array) {
+    return array.indexOf(elem.toLowerCase()) !== array.lastIndexOf(elem.toLowerCase());
+  });
+  console.log(test);
+  if (test.length > 0) {
+    return 'Есть повторяющиеся элементы:' + test;
+  }
+  console.log('Тест на повторы пройден');
+
+  for (let i = 0; i < arr.length; i++) {
+    if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
+      return 'Элемент содержит запрещенные символы: ' + arr[i];
+    }
+  }
+  console('Проверка на запрещенные символы пройдена');
+}
+
+validateHashtags('#fdsfds #FDSFDS1 #vvxcvxc #12345');
+
+// function validateHashtagsLength(value) {
+//   return value.length >= 2 && value.length <= 20;
+// }
+
+const hashtagsField = findElement(document, '.text__hashtags');
+pristine.addValidator(hashtagsField, validateHashtags);
+
+hashtagsField.addEventListener('keydown', (evt) => {
+  if (isEscapeKey) {
+    evt.stopPropagation();
+  }
+});
+const descriptionField = findElement(document, '.text__description');
+descriptionField.addEventListener('keydown', event.stopPropagation());
 
 // __________________ Повтор кода picture.js
 // о чем говорится в задании

@@ -41,10 +41,6 @@ function closeModal() {
   body.removeEventListener('keydown', onModalEscKeyDown);
 }
 
-// 0 из 7
-// 5 из 7
-// 7 из 7
-
 // общее число комментариев. Показываю первые пять. По нажатию еще пять.
 // все комментарии закрыты, кнопка скрыта.
 // Вызов (первый вызов): показать пять
@@ -120,9 +116,6 @@ function renderPicture(image) {
     templateCommentFragment.appendChild(templateSocialComment);
   });
 
-
-  // Что-то перестала работать кнопка escape после одного закрытия
-  // Удаление всех дочерних элементов
   if (post(id).comments.length) {
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
