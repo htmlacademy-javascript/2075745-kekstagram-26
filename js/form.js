@@ -42,17 +42,17 @@ function validateHashtags(str) {
     arr.push(str.slice(position, (foundPos !== -1) ? foundPos : str.length));
   }
   if (arr.length === 0) {
-    return '# не найден';
+    return false;  //'# не найден';
   }
   console.log(arr);
   console.log('Проверка на # пройдена');
   if (arr.length > MAX_COUNT_HASHTAGS) {
-    return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
+    return false;  //`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
   }
   console.log('Проверка на количество хештегов пройдена');
   for (let i = 0; i < arr.length - 1; i++) {
     if (arr[i].slice(-1) !== ' ') {
-      return 'Пробел не найден';
+      return false;  //'Пробел не найден';
     }
   }
 
@@ -65,10 +65,10 @@ function validateHashtags(str) {
 
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].length < 1) {
-      return 'Тег состоит только из #';
+      return false;  // 'Тег состоит только из #';
     }
     if (arr[i].length > 19) {
-      return 'Длина тега больше 20, включая #';
+      return false;  // 'Длина тега больше 20, включая #';
     }
   }
   console.log('Проверка на длину тегов пройдена');
@@ -81,19 +81,20 @@ function validateHashtags(str) {
   });
   console.log(test);
   if (test.length > 0) {
-    return 'Есть повторяющиеся элементы:' + test;
+    return false;  //'Есть повторяющиеся элементы:' + test;
   }
   console.log('Тест на повторы пройден');
 
   for (let i = 0; i < arr.length; i++) {
     if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
-      return 'Элемент содержит запрещенные символы: ' + arr[i];
+      return false; //'Элемент содержит запрещенные символы: ' + arr[i];
     }
   }
   console('Проверка на запрещенные символы пройдена');
+  return true;
 }
 
-validateHashtags('#fdsfds #FDSFDS1 #vvxcvxc #12345');
+// validateHashtags('#fdsfds #FDSFDS1 #vvxcvxc #12345');
 
 // function validateHashtagsLength(value) {
 //   return value.length >= 2 && value.length <= 20;
