@@ -124,11 +124,13 @@ const onModalEscKeyDown = (evt) => {
 };
 
 // ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
-export function openModal() {
+function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
+  console.log('открыто модальное окно');
   // renderPicture(image);
+  console.log(body);
   body.addEventListener('keydown', onModalEscKeyDown);
 }
 
