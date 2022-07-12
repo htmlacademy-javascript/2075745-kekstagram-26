@@ -7,17 +7,38 @@ uploadFile.addEventListener('change', openModal);
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
-const form = findElement(document, '.upload-select-image');
+const form = findElement(document, '#upload-select-image');
 const pristine = new Pristine(form);
-
 // const pristine = new Pristine(form, {
-//   classTo: 'setup-wizard-form__element',
-//   errorTextParent: 'setup-wizard-form__element',
-//   errorTextClass: 'setup-wizard-form__error-text',
+//   classTo: 'success',
+//   errorTextParent: 'success',
+//   errorTextClass: 'error',
 // });
 
+// < !--Сообщение с ошибкой загрузки изображения-- >
+// <template id="error">
+//   <section class="error">
+//     <div class="error__inner">
+//       <h2 class="error__title">Ошибка загрузки файла</h2>
+//       <button type="button" class="error__button">Загрузить другой файл</button>
+//     </div>
+//   </section>
+// </template>
 
-// ______
+// <!--Сообщение об успешной загрузке изображения-- >
+// <template id="success">
+//   <section class="success">
+//     <div class="success__inner">
+//       <h2 class="success__title">Изображение успешно загружено</h2>
+//       <button type="button" class="success__button">Круто!</button>
+//     </div>
+//   </section>
+// </template>
+
+// <!--Экран загрузки изображения-- >
+// <template id="messages">
+//   <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
+// </template>
 
 function validateHashtags(str) {
   const arr = [];
@@ -32,34 +53,40 @@ function validateHashtags(str) {
     foundPos = str.indexOf(target, position);
     arr.push(str.slice(position, (foundPos !== -1) ? foundPos : str.length));
   }
-  if (arr.length === 0) {
-    return false;  //'# не найден';
+  if (str.length > 0 && arr.length === 0) {
+    showAlert('# не найден');
+    return '# не найден';
   }
-  console.log(arr);
   console.log('Проверка на # пройдена');
+
   if (arr.length > MAX_COUNT_HASHTAGS) {
-    return false;  //`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
+    showAlert(`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`);
+    return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
   }
   console.log('Проверка на количество хештегов пройдена');
+
   for (let i = 0; i < arr.length - 1; i++) {
     if (arr[i].slice(-1) !== ' ') {
-      return false;  //'Пробел не найден';
+      showAlert('Пробел не найден');
+      return 'Пробел не найден';
     }
   }
 
+  // Удаление пробелов в конце тегов
   for (let i = 0; i < arr.length; i++) {
     while ((arr[i].slice(-1) === ' ')) {
       arr[i] = arr[i].slice(0, -1);
     }
   }
-  console.log('Пробелы в конце тегов удалены');
 
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].length < 1) {
-      return false;  // 'Тег состоит только из #';
+      showAlert('Тег состоит только из #');
+      return 'Тег состоит только из #';
     }
     if (arr[i].length > 19) {
-      return false;  // 'Длина тега больше 20, включая #';
+      showAlert('Длина тега больше 20, включая #');
+      return 'Длина тега больше 20, включая #';
     }
   }
   console.log('Проверка на длину тегов пройдена');
@@ -67,21 +94,32 @@ function validateHashtags(str) {
   for (let i = 0; i < arr.length; i++) {
     arr[i] = arr[i].toLowerCase();
   }
-  const test = arr.filter(function (elem, pos, array) {
-    return array.indexOf(elem.toLowerCase()) !== array.lastIndexOf(elem.toLowerCase());
-  });
-  console.log(test);
+  const test = arr.filter((elem, pos, array) =>
+    (array.indexOf(elem.toLowerCase()) !== array.lastIndexOf(elem.toLowerCase()))
+  );
+
   if (test.length > 0) {
-    return false;  //'Есть повторяющиеся элементы:' + test;
+    showAlert(`Есть повторяющиеся элементы: ${test}`);
+    return `Есть повторяющиеся элементы: ${test}`;
   }
   console.log('Тест на повторы пройден');
 
   for (let i = 0; i < arr.length; i++) {
     if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
-      return false; //'Элемент содержит запрещенные символы: ' + arr[i];
+      showAlert(`Элемент содержит запрещенные символы: ${arr[i]}`);
+      return `Элемент содержит запрещенные символы: ${arr[i]}`;
     }
   }
-  console('Проверка на запрещенные символы пройдена');
+  console.log('Проверка на запрещенные символы пройдена');
+  console.log(`${str} ГОДЕН`);
+
+  const templateSuccess = findElement(document, '#success');
+  const templateSection = findElement(templateSuccess.content, 'section');
+  const templateFragment = document.createDocumentFragment();
+  const successElement = templateSection.cloneNode(true);
+  const successTitle = findElement(successElement, 'h2');
+  successTitle.textContent = 'Ошибка по умолчанию/Успешно';
+  templateFragment.appendChild(successElement);
   return true;
 }
 
@@ -91,13 +129,17 @@ function validateHashtags(str) {
 //   return value.length >= 2 && value.length <= 20;
 // }
 
+const MAX_LENGTH_DESCRIPTION = 140;
 function validateDescription(str) {
 
-  console(`Проверка описания ${str} пока не сделана`);
+  if (str.length > MAX_LENGTH_DESCRIPTION) {
+    showAlert(`Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`);
+    return `Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`;
+  }
   return true;
 }
 
-const hashtagsField = findElement(document, '.text__hashtags');
+const hashtagsField = findElement(form, '.text__hashtags');
 pristine.addValidator(hashtagsField, validateHashtags);
 
 hashtagsField.addEventListener('keydown', (evt) => {
@@ -106,7 +148,7 @@ hashtagsField.addEventListener('keydown', (evt) => {
   }
 });
 
-const descriptionField = findElement(document, '.text__description');
+const descriptionField = findElement(form, '.text__description');
 pristine.addValidator(descriptionField, validateDescription);
 
 descriptionField.addEventListener('keydown', (evt) => {
@@ -135,8 +177,7 @@ function openModal() {
   body.classList.add('modal-open');
   console.log('открыто модальное окно');
   // renderPicture(image);
-  console.log(body);
-  // body.addEventListener('keydown', onModalEscKeyDown);
+  body.addEventListener('keydown', onModalEscKeyDown);
 }
 
 export function closeModal() {
@@ -158,7 +199,7 @@ pictureCancel.addEventListener('keydown', (evt) => {
   }
 });
 
-const submitButton = findElement(document, 'upload-submit');
+const submitButton = findElement(form, '#upload-submit');
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = 'Публикую...';
@@ -172,7 +213,6 @@ const unblockSubmitButton = () => {
 export const setUserFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
-
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
