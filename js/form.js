@@ -1,6 +1,6 @@
 import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
 import { sendData } from './api.js';
-
+// пустой комментарий
 const uploadFile = findElement(document, '#upload-file');
 uploadFile.addEventListener('change', openModal);
 
