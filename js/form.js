@@ -1,4 +1,5 @@
-import { findElement, isEnterKey, isEscapeKey } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
+import { sendData } from './api.js';
 
 const uploadFile = findElement(document, '#upload-file');
 uploadFile.addEventListener('change', openModal);
@@ -15,16 +16,6 @@ const pristine = new Pristine(form);
 //   errorTextClass: 'setup-wizard-form__error-text',
 // });
 
-form.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  const isValid = pristine.validate();
-  if (isValid) {
-    console.log('Норма');
-  }
-  else {
-    console.log('Не валидна');
-  }
-});
 
 // ______
 
@@ -100,6 +91,12 @@ function validateHashtags(str) {
 //   return value.length >= 2 && value.length <= 20;
 // }
 
+function validateDescription(str) {
+
+  console(`Проверка описания ${str} пока не сделана`);
+  return true;
+}
+
 const hashtagsField = findElement(document, '.text__hashtags');
 pristine.addValidator(hashtagsField, validateHashtags);
 
@@ -108,8 +105,16 @@ hashtagsField.addEventListener('keydown', (evt) => {
     evt.stopPropagation();
   }
 });
+
 const descriptionField = findElement(document, '.text__description');
-descriptionField.addEventListener('keydown', event.stopPropagation());
+pristine.addValidator(descriptionField, validateDescription);
+
+descriptionField.addEventListener('keydown', (evt) => {
+  if (isEscapeKey) {
+    evt.stopPropagation();
+  }
+});
+
 
 // __________________ Повтор кода picture.js
 // о чем говорится в задании
@@ -131,10 +136,10 @@ function openModal() {
   console.log('открыто модальное окно');
   // renderPicture(image);
   console.log(body);
-  body.addEventListener('keydown', onModalEscKeyDown);
+  // body.addEventListener('keydown', onModalEscKeyDown);
 }
 
-function closeModal() {
+export function closeModal() {
   modalWindow.classList.add('hidden');
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
@@ -152,6 +157,39 @@ pictureCancel.addEventListener('keydown', (evt) => {
     closeModal();
   }
 });
+
+const submitButton = findElement(document, 'upload-submit');
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикую...';
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+};
+
+export const setUserFormSubmit = (onSuccess) => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      blockSubmitButton();
+      sendData(
+        () => {
+          onSuccess();
+          unblockSubmitButton();
+        },
+        () => {
+          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          unblockSubmitButton();
+        },
+        new FormData(evt.target),
+      );
+    }
+  });
+};
 
 //     Заведите модуль, который будет отвечать за работу с формой.
 //     Пропишите тегу < form > правильные значения атрибутов method и адрес action для отправки формы на сервер.
