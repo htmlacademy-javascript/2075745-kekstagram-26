@@ -6,7 +6,7 @@ uploadFile.addEventListener('change', openModal);
 
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
-// пусто
+
 const form = findElement(document, '#upload-select-image');
 const pristine = new Pristine(form);
 // const pristine = new Pristine(form, {
