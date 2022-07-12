@@ -81,10 +81,10 @@ const createSingleComment = function () {
   };
 };
 
-const MAX_COUNT_COMMENTS = 5;
+const MAX_COUNT_COMMENTS = 25;
 const createComments = function () {
   const arr = [];
-  const countComments = getRandomPositiveInteger(1, MAX_COUNT_COMMENTS);
+  const countComments = getRandomPositiveInteger(0, MAX_COUNT_COMMENTS);
   for (let i = 1; i <= countComments; i++) {
     const newElement = createSingleComment();
     arr.push(newElement);
@@ -115,3 +115,6 @@ export const createSinglePost = function () {
 
 export const createPosts = Array.from({ length: PHOTOS_LENGTH }, createSinglePost); //() =>
 export const post = (i) => createPosts[i - 1];
+
+// const re = /^#[A - Za - zА - Яа - яЁе0 - 9]{ 1, 19 } $/;
+// console.log(re.test('#fdsf0df'));
