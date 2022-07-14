@@ -1,6 +1,9 @@
 import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
 import { sendData } from './api.js';
+import { minusScale, plusScale, changeScale } from './slider.js';
 
+// пустой комментарий
+//второй пустой комментарий
 const uploadFile = findElement(document, '#upload-file');
 uploadFile.addEventListener('change', openModal);
 
@@ -175,9 +178,15 @@ function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
-  console.log('открыто модальное окно');
   // renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
+
+  const buttonMinus = findElement(document, '.scale__control--smaller');
+  buttonMinus.addEventListener('click', minusScale);
+  const buttonPlus = findElement(document, '.scale__control--bigger');
+  buttonPlus.addEventListener('click', plusScale);
+  const sliderElementValue = findElement(document, '.scale__control--value');
+  sliderElementValue.onchange = changeScale;
 }
 
 export function closeModal() {
