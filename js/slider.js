@@ -30,6 +30,7 @@ export function changeScale() {
 const effectLevel = findElement(document, '.effect-level');
 const effectLevelSlider = findElement(document, '.effect-level__slider');
 const effectLevelValue = findElement(document, '.effect-level__value');
+let currentEffect;
 
 noUiSlider.create(effectLevelSlider, {
   range: {
@@ -43,19 +44,33 @@ noUiSlider.create(effectLevelSlider, {
 
 effectLevelSlider.noUiSlider.on('update', () => {
   effectLevelValue.value = effectLevelSlider.noUiSlider.get();
-  const effectFieldset = findElement(document, '.effects');
-  console.log(effectFieldset);
-  console.log(document.activeElement);
-  console.log(effectFieldset.activeElement);
-
-  imagePreview.style.filter = `grayscale(${effectLevelValue.value})`; //???
+  switch (currentEffect) {
+    case 'chrome':
+      imagePreview.style.filter = `grayscale(${effectLevelValue.value})`;
+      break;
+    case 'sepia':
+      imagePreview.style.filter = `sepia(${effectLevelValue.value})`;
+      break;
+    case 'marvin':
+      imagePreview.style.filter = `invert(${effectLevelValue.value}%)`;
+      break;
+    case 'phobos':
+      imagePreview.style.filter = `blur(${effectLevelValue.value}px)`;
+      break;
+    case 'heat':
+      imagePreview.style.filter = `brightness(${effectLevelValue.value})`;
+      break;
+    default:
+      console.log(currentEffect);
+  }
 });
 
 const effectsList = findElement(document, '.effects__list');
 effectLevel.classList.add('hidden');
 imagePreview.removeAttribute('style');
 effectsList.addEventListener('change', (evt) => {
-  switch (evt.target.value) {
+  currentEffect = evt.target.value;
+  switch (currentEffect) {
     case 'chrome':
       effectLevel.classList.remove('hidden');
       effectLevelSlider.noUiSlider.updateOptions({
@@ -66,7 +81,6 @@ effectsList.addEventListener('change', (evt) => {
         start: 1,
         step: 0.1,
       });
-      imagePreview.style.filter = `grayscale(${effectLevelValue.value})`;
       break;
     case 'sepia':
       effectLevel.classList.remove('hidden');
@@ -78,7 +92,6 @@ effectsList.addEventListener('change', (evt) => {
         start: 1,
         step: 0.1,
       });
-      imagePreview.style.filter = `sepia(${effectLevelValue.value})`;
       break;
     case 'marvin':
       effectLevel.classList.remove('hidden');
@@ -90,7 +103,6 @@ effectsList.addEventListener('change', (evt) => {
         start: 100,
         step: 1,
       });
-      imagePreview.style.filter = `invert(${effectLevelValue.value}%)`;
       break;
     case 'phobos':
       effectLevel.classList.remove('hidden');
@@ -102,7 +114,6 @@ effectsList.addEventListener('change', (evt) => {
         start: 3,
         step: 0.1,
       });
-      imagePreview.style.filter = `blur(${effectLevelValue.value}px)`;
       break;
     case 'heat':
       effectLevel.classList.remove('hidden');
@@ -114,7 +125,6 @@ effectsList.addEventListener('change', (evt) => {
         start: 3,
         step: 0.1,
       });
-      imagePreview.style.filter = `brightness(${effectLevelValue.value})`;
       break;
     case 'none':
       effectLevel.classList.add('hidden');
@@ -122,6 +132,5 @@ effectsList.addEventListener('change', (evt) => {
       break;
     default:
       console.log(evt.target.value);
-
   }
 });
