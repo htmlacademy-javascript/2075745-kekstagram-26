@@ -7,7 +7,7 @@ const SCALE_STEP = 25;
 export function minusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value >= SCALE_STEP * 2) {
-    sliderElementValue.value = value - SCALE_STEP + "%"; //?как нормально сделать конкатенацию?
+    sliderElementValue.value = value - SCALE_STEP + '%'; //?как нормально сделать конкатенацию?
     changeScale();
   }
 }
@@ -15,7 +15,7 @@ export function minusScale() {
 export function plusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value <= 100 - SCALE_STEP) {
-    sliderElementValue.value = value + SCALE_STEP + "%"; //?как нормально сделать конкатенацию?
+    sliderElementValue.value = value + SCALE_STEP + '%'; //?как нормально сделать конкатенацию?
     changeScale();
   }
 }
@@ -61,7 +61,7 @@ effectLevelSlider.noUiSlider.on('update', () => {
       imagePreview.style.filter = `brightness(${effectLevelValue.value})`;
       break;
     default:
-      console.log(currentEffect);
+      throw new Error(currentEffect);
   }
 });
 
@@ -131,6 +131,6 @@ effectsList.addEventListener('change', (evt) => {
       imagePreview.removeAttribute('style');
       break;
     default:
-      console.log(evt.target.value);
+      throw new Error(evt.target.value);
   }
 });

@@ -60,13 +60,13 @@ function validateHashtags(str) {
     showAlert('# не найден');
     return '# не найден';
   }
-  console.log('Проверка на # пройдена');
+  // Проверка на # пройдена
 
   if (arr.length > MAX_COUNT_HASHTAGS) {
     showAlert(`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`);
     return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
   }
-  console.log('Проверка на количество хештегов пройдена');
+  // Проверка на количество хештегов пройдена
 
   for (let i = 0; i < arr.length - 1; i++) {
     if (arr[i].slice(-1) !== ' ') {
@@ -92,7 +92,7 @@ function validateHashtags(str) {
       return 'Длина тега больше 20, включая #';
     }
   }
-  console.log('Проверка на длину тегов пройдена');
+  // Проверка на длину тегов пройдена
 
   for (let i = 0; i < arr.length; i++) {
     arr[i] = arr[i].toLowerCase();
@@ -105,7 +105,7 @@ function validateHashtags(str) {
     showAlert(`Есть повторяющиеся элементы: ${test}`);
     return `Есть повторяющиеся элементы: ${test}`;
   }
-  console.log('Тест на повторы пройден');
+  // Тест на повторы пройден
 
   for (let i = 0; i < arr.length; i++) {
     if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
@@ -113,8 +113,8 @@ function validateHashtags(str) {
       return `Элемент содержит запрещенные символы: ${arr[i]}`;
     }
   }
-  console.log('Проверка на запрещенные символы пройдена');
-  console.log(`${str} ГОДЕН`);
+  // Проверка на запрещенные символы пройдена
+  // console.log(`${str} ГОДЕН`);
 
   const templateSuccess = findElement(document, '#success');
   const templateSection = findElement(templateSuccess.content, 'section');
