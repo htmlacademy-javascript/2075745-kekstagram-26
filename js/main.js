@@ -1,6 +1,8 @@
-import './loading.js';
 import './form.js';
-import './api.js';
+import { getData, sendData, onSuccessMessage, onFailMessage } from './api.js';
 import { closeModal, setUserFormSubmit } from './form.js';
 
+
 setUserFormSubmit(closeModal);
+
+const gettingData = getData(onSuccessMessage, onFailMessage);

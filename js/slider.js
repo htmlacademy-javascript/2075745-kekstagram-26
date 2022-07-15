@@ -61,7 +61,7 @@ effectLevelSlider.noUiSlider.on('update', () => {
       imagePreview.style.filter = `brightness(${effectLevelValue.value})`;
       break;
     default:
-      throw new Error(currentEffect);
+      console.log(currentEffect);
   }
 });
 

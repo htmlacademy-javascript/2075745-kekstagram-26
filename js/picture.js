@@ -1,5 +1,5 @@
 import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
-import { post } from './data.js';
+import { createPosts, post } from './data.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
@@ -97,6 +97,7 @@ function renderPicture(image) {
   const commentsCount = findElement(modalWindow, '.comments-count');
   commentsCount.textContent = image.comments;
   const id = image.id.slice(('picture-').length);
+  console.log(createPosts[id - 1]);
   socialPicture.src = post(id).avatar;
   socialCaption.textContent = post(id).description;
   socialLikes.textContent = post(id).likes;

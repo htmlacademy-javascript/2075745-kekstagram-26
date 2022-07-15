@@ -1,5 +1,6 @@
 import { getRandomArrayElement, getRandomMessage, getRandomAvatar, createCounter } from './utils.js';
-import { getRandomPhoto, getRandomPositiveInteger } from './utils.js';
+import { getRandomPhoto, getRandomPositiveInteger, findElement } from './utils.js';
+import { openModal } from './picture.js';
 
 const STANDARDMESSAGE = [
   'Всё отлично!',
@@ -92,28 +93,56 @@ const createComments = function () {
   return arr;
 };
 
-export const createSinglePost = function () {
-  return {
-    id: idPost(),
-    avatar: getRandomAvatar(AVATAR_COUNT),
-    url: getRandomPhoto(PHOTOS_LENGTH),
-    description: getRandomArrayElement(STANDARDDESCRIPTION),
-    likes: getRandomPositiveInteger(15, 200),
-    comments: createComments(),
+// export const createSinglePost = function ({ id, url, likes, description }) {
+//   return {
+//     id: id, //idPost(),
+//     avatar: getRandomAvatar(AVATAR_COUNT),
+//     url: url, //getRandomPhoto(PHOTOS_LENGTH),
+//     description: description, //getRandomArrayElement(STANDARDDESCRIPTION),
+//     likes: likes, //getRandomPositiveInteger(15, 200),
+//     comments: createComments(),
+//   };
+// };
+
+export const createPosts = (messages) => {
+  const arr = [];
+  const template = findElement(document, '#picture');
+  const templatePicture = findElement(template.content, '.picture');
+  const templatePictureFragment = document.createDocumentFragment();
+
+  messages.forEach(({ id, url, description, comments, likes }) => {
+    const photosElement = templatePicture.cloneNode(true);
+    photosElement.id = `picture-${id}`;
+    const pictureImg = findElement(photosElement, '.picture__img');
+    pictureImg.src = url;
+    pictureImg.alt = description;
+    const pictureComments = findElement(photosElement, '.picture__comments');
+    pictureComments.textContent = comments.length;
+    const pictureLikes = findElement(photosElement, '.picture__likes');
+    pictureLikes.textContent = likes;
+    templatePictureFragment.appendChild(photosElement);
+    const avatar = getRandomAvatar(AVATAR_COUNT);
+    arr.push({ id, url, description, comments, likes, avatar });
+  }
+  );
+  const loadingPictures = findElement(document, '.pictures');
+  loadingPictures.appendChild(templatePictureFragment);
+
+  loadingPictures.onclick = function (evt) {
+    if (evt.target.tagName === 'IMG') {
+      const image = {
+        id: evt.target.parentElement.id,
+        src: evt.target.src,
+        alt: evt.target.alt,
+        comments: evt.target.nextElementSibling.firstElementChild.textContent,
+        likes: evt.target.nextElementSibling.lastElementChild.textContent,
+      };
+      openModal(image);
+    }
   };
+  return arr;
 };
 
-// export const createMock = (length, factory,) =>
-//   Array.from({ length }, (_, i) => createAuthor(i));
-
-
-// const createPhoto = () => {
-//   // throw new Error('not implemented yet');
-// }
-// export const mockPublishedPhotos = createMock(PHOTOS_LENGTH, createPhoto);
-// console.log(mockPublishedPhotos);
-
-export const createPosts = Array.from({ length: PHOTOS_LENGTH }, createSinglePost); //() =>
 export const post = (i) => createPosts[i - 1];
 
 // const re = /^#[A - Za - zА - Яа - яЁе0 - 9]{ 1, 19 } $/;
