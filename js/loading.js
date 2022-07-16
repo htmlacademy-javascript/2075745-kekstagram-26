@@ -1,6 +1,6 @@
-import { findElement } from './utils.js';
+// import { findElement } from './utils.js';
 // import { createPosts } from './data.js';
-import { openModal } from './picture.js';
+// import { openModal } from './picture.js';
 
 // const template = findElement(document, '#picture');
 // const templatePicture = findElement(template.content, '.picture');

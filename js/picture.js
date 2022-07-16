@@ -1,5 +1,5 @@
 import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
-import { createPosts, post } from './data.js';
+import { arrPosts } from './data.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
@@ -97,16 +97,16 @@ function renderPicture(image) {
   const commentsCount = findElement(modalWindow, '.comments-count');
   commentsCount.textContent = image.comments;
   const id = image.id.slice(('picture-').length);
-  console.log(createPosts[id - 1]);
-  socialPicture.src = post(id).avatar;
-  socialCaption.textContent = post(id).description;
-  socialLikes.textContent = post(id).likes;
+  socialPicture.src = arrPosts[id].avatar;
+  socialCaption.textContent = arrPosts[id].description;
+  socialLikes.textContent = arrPosts[id].likes;
 
   const socialComments = findElement(document, '.social__comments');
   const oneSocialComment = findElement(socialComments, '.social__comment');
   const templateCommentFragment = document.createDocumentFragment();
 
-  post(id).comments.forEach((comments) => {
+
+  arrPosts[id].comments.forEach((comments) => {
     const templateSocialComment = oneSocialComment.cloneNode(true);
     templateSocialComment.classList.add('hidden');
     const avatar = findElement(templateSocialComment, '.social__picture');
@@ -117,7 +117,7 @@ function renderPicture(image) {
     templateCommentFragment.appendChild(templateSocialComment);
   });
 
-  if (post(id).comments.length) {
+  if (arrPosts[id].comments.length) {
     while (socialComments.firstChild) {
       socialComments.removeChild(socialComments.firstChild);
     }

@@ -1,4 +1,4 @@
-import { createPosts } from "./data.js";
+import { createPosts } from './data.js';
 
 export const getData = (onSuccess) => {
   fetch('https://26.javascript.pages.academy/kekstagram/data')
