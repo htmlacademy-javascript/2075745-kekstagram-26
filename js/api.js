@@ -14,7 +14,6 @@ export const sendData = (onSuccess, onFail, body) => {
     'https://26.javascript.pages.academy/kekstagram',
     {
       method: 'POST',
-      // enctype: 'multipart/form-data',
       body,
     },
   )
@@ -22,11 +21,11 @@ export const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+        onFail();
       }
     })
     .catch(() => {
-      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      onFail();
     });
 };
 

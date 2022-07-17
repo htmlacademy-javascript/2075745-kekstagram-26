@@ -312,7 +312,7 @@ function callMouseOfError() {
   removeErrorWindow();
 }
 
-export const setUserFormSubmit = (onSuccess) => {
+export const setUserFormSubmit = (onSuccess, onError) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -321,12 +321,13 @@ export const setUserFormSubmit = (onSuccess) => {
       sendData(
         () => {
           onSuccess();
-          defaultFormData();
-          defaultDescription();
+          // defaultFormData();
+          // defaultDescription();
           unblockSubmitButton();
           showMessageSuccess();
         },
         () => {
+          onError();
           unblockSubmitButton();
           showMessageError();
         },
