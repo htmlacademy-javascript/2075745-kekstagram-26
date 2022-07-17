@@ -336,13 +336,3 @@ export const setUserFormSubmit = (onSuccess, onError) => {
     }
   });
 };
-
-const DEBOUNCE_DEFAULT_DELAY = 500;
-function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
-  let timeout;
-
-  return (...rest) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-  };
-}

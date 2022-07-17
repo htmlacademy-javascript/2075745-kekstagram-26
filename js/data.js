@@ -100,6 +100,10 @@ import { openModal } from './picture.js';
 //     comments: createComments(),
 //   };
 // };
+
+const imageFilter = findElement(document, '.img-filters');
+const imageFilters = findElement(document, '.img-filters__form');
+
 const AVATAR_COUNT = 6;
 export const arrPosts = [];
 export const createPosts = (messages) => {
@@ -125,6 +129,11 @@ export const createPosts = (messages) => {
   );
   const loadingPictures = findElement(document, '.pictures');
   loadingPictures.appendChild(templatePictureFragment);
+
+  // imageFilter.classList.remove('img-filters--inactive');
+  // console.log(imageFilter);
+  // const buttonFilter = imageFilters.firstElementChild('button');
+  // console.log(buttonFilter);
 
   loadingPictures.onclick = function (evt) {
     if (evt.target.tagName === 'IMG') {

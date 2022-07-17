@@ -2,11 +2,8 @@ import { findElement } from './utils.js';
 
 const sliderElementValue = findElement(document, '.scale__control--value');
 const imagePreview = findElement(document, '.img-upload__preview img');
-// ? масштаб картинки - оставлять ли белый фон .img-upload__preview img
-// ? или менять масштаб div целиком? .img-upload__preview
-// изображению внутри .img-upload__preview должен добавляться соответствующий стиль CSS
 
-const SCALE_STEP = 25;
+const SCALE_STEP = 25;    // Шаг масштаба
 export function minusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value >= SCALE_STEP * 2) {
