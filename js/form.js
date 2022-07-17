@@ -176,6 +176,7 @@ const onModalEscKeyDown = (evt) => {
     closeModal();
   }
 };
+const submitButton = findElement(form, '#upload-submit');
 
 // ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
 function openModal() {
@@ -191,6 +192,7 @@ function openModal() {
   buttonPlus.addEventListener('click', plusScale);
   const sliderElementValue = findElement(document, '.scale__control--value');
   sliderElementValue.onchange = changeScale;
+  submitButton.focus();
 }
 
 export function closeModal() {
@@ -208,7 +210,6 @@ pictureCancel.addEventListener('keydown', (evt) => {
   }
 });
 
-const submitButton = findElement(form, '#upload-submit');
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = 'Публикую...';

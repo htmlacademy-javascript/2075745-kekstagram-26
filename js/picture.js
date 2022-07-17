@@ -1,5 +1,6 @@
 import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
 import { arrPosts } from './data.js';
+// ? модули ссылаются друг на друга. Разорвать этот порочный круг data <-> picture
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
@@ -37,7 +38,7 @@ function closeModal() {
   modalWindow.classList.add('hidden');
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
-  // надо ли чистить что-то за собой ? анти rendererPicture
+  // ?надо ли чистить что-то за собой ? анти rendererPicture
   body.removeEventListener('keydown', onModalEscKeyDown);
 }
 

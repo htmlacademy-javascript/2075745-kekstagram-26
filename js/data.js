@@ -146,6 +146,7 @@ export const createPosts = (messages) => {
   // const buttonFilter = imageFilters.firstElementChild('button');
   // console.log(buttonFilter);
 
+  //? Ещё сюда надо повесить нажатие Enter на картинку, чтобы открывалась
   loadingPictures.onclick = function (evt) {
     if (evt.target.tagName === 'IMG') {
       const image = {
