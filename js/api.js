@@ -11,9 +11,10 @@ export const getData = (onSuccess) => {
 
 export const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://26.javascript.pages.academy/kekstagram/data',
+    'https://26.javascript.pages.academy/kekstagram',
     {
       method: 'POST',
+      // enctype: 'multipart/form-data',
       body,
     },
   )
