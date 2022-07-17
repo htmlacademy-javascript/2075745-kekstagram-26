@@ -21,7 +21,6 @@ uploadFile.addEventListener('change', () => {
   openModal();
 });
 
-
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
@@ -235,11 +234,6 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-const defaultDescription = () => {
-  hashtagsField.value = '';
-  descriptionField.value = '';
-};
-
 // ---
 
 function callEventKeyboardSuccess(evt) {
@@ -274,10 +268,9 @@ function showMessageSuccess() {
   removeSuccessWindow(buttonSuccess);
   document.addEventListener('keydown', callEventKeyboard);
   const successWindow = findElement(document, '.success');
-  successWindow.addEventListener('click', callMouseOfError);
+  successWindow.addEventListener('click', callMouseOfSuccess);
 }
 
-// ---
 function showMessageError() {
   const template = findElement(document, '#error');
   const templateError = findElement(template.content, '.error');
@@ -321,10 +314,10 @@ export const setUserFormSubmit = (onSuccess, onError) => {
       sendData(
         () => {
           onSuccess();
-          // defaultFormData();
-          // defaultDescription();
           unblockSubmitButton();
           showMessageSuccess();
+          form.reset();
+          defaultFormData();
         },
         () => {
           onError();

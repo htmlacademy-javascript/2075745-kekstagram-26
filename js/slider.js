@@ -34,19 +34,10 @@ let currentEffect;
 // ? Надо будет потом проверить, когда успешной будет отправка фотографии
 
 export function defaultFormData() {
-  imagePreview.style.filter.remove(currentEffect);
   imagePreview.classList.add('effects__preview--none');
   imagePreview.style.removeProperty('filter');
   imagePreview.style.removeProperty('transform');
-  // уже есть скрытие слайдера sliderFieldset.classList.add('hidden');
-  // sliderFieldset.classList.add('hidden');
-
-  sliderElementValue.value = '100%';
-  changeScale();
-  const effectNone = find(document, '#effect-none');
-  effectNone.checked = true;
-  effectLevelSlider.value = 'none';
-  effectLevelSlider.noUiSlider.on('update');
+  effectLevel.classList.add('hidden');
 }
 
 noUiSlider.create(effectLevelSlider, {
