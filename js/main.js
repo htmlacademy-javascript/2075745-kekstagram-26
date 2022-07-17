@@ -1,4 +1,4 @@
-import { getData, onSuccessMessage, onFailMessage } from './api.js';
+import { getData } from './api.js';
 import { closeModal, setUserFormSubmit } from './form.js';
 import { getFilteredArray, setActiveFilterClick, filterSection } from './filter.js';
 import { debounce, DEBOUNCE_DEFAULT_DELAY, showAlert } from './utils.js';
