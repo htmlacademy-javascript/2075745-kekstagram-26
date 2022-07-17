@@ -327,7 +327,6 @@ export const setUserFormSubmit = (onSuccess) => {
           showMessageSuccess();
         },
         () => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
           unblockSubmitButton();
           showMessageError();
         },
