@@ -1,11 +1,26 @@
 import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
 import { sendData } from './api.js';
-import { minusScale, plusScale, changeScale } from './slider.js';
+import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
 
-// пустой комментарий
-//второй пустой комментарий
+const TYPES_OF_FILE = ['gif', 'jpg', 'jpeg', 'png'];
+export const showPreviewImage = (input) => {
+  const file = input.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = TYPES_OF_FILE.some((it) => fileName.endsWith(it));
+  const imagePreview = findElement(document, '.img-upload__preview img');
+
+  if (matches) {
+    imagePreview.src = URL.createObjectURL(file);
+  }
+};
+
 const uploadFile = findElement(document, '#upload-file');
-uploadFile.addEventListener('change', openModal);
+uploadFile.addEventListener('change', () => {
+  showPreviewImage(uploadFile);
+  openModal();
+});
+
 
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
@@ -18,30 +33,21 @@ const pristine = new Pristine(form);
 //   errorTextClass: 'error',
 // });
 
-// < !--Сообщение с ошибкой загрузки изображения-- >
-// <template id="error">
-//   <section class="error">
-//     <div class="error__inner">
-//       <h2 class="error__title">Ошибка загрузки файла</h2>
-//       <button type="button" class="error__button">Загрузить другой файл</button>
-//     </div>
-//   </section>
-// </template>
+// const pristine = new Pristine(form, {
+//   classTo: 'text__label',
+//   errorClass: 'text__label--invalid',
+//   successClass: 'text__label--valid',
+//   errorTextParent: 'text__label',
+//   errorTextTag: 'p',
+//   errorTextClass: 'text__error'
+// });
 
-// <!--Сообщение об успешной загрузке изображения-- >
-// <template id="success">
-//   <section class="success">
-//     <div class="success__inner">
-//       <h2 class="success__title">Изображение успешно загружено</h2>
-//       <button type="button" class="success__button">Круто!</button>
-//     </div>
-//   </section>
-// </template>
-
-// <!--Экран загрузки изображения-- >
-// <template id="messages">
-//   <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
-// </template>
+// const resetForm = () => {
+//   uploadButton.value = '';
+//   hashtagsInput.textContent = '';
+//   commentArea.textContent = '';
+//   resetEffect();
+// };
 
 function validateHashtags(str) {
   const arr = [];
@@ -60,13 +66,13 @@ function validateHashtags(str) {
     showAlert('# не найден');
     return '# не найден';
   }
-  console.log('Проверка на # пройдена');
+  // Проверка на # пройдена
 
   if (arr.length > MAX_COUNT_HASHTAGS) {
     showAlert(`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`);
     return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
   }
-  console.log('Проверка на количество хештегов пройдена');
+  // Проверка на количество хештегов пройдена
 
   for (let i = 0; i < arr.length - 1; i++) {
     if (arr[i].slice(-1) !== ' ') {
@@ -92,7 +98,7 @@ function validateHashtags(str) {
       return 'Длина тега больше 20, включая #';
     }
   }
-  console.log('Проверка на длину тегов пройдена');
+  // Проверка на длину тегов пройдена
 
   for (let i = 0; i < arr.length; i++) {
     arr[i] = arr[i].toLowerCase();
@@ -105,7 +111,7 @@ function validateHashtags(str) {
     showAlert(`Есть повторяющиеся элементы: ${test}`);
     return `Есть повторяющиеся элементы: ${test}`;
   }
-  console.log('Тест на повторы пройден');
+  // Тест на повторы пройден
 
   for (let i = 0; i < arr.length; i++) {
     if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
@@ -113,8 +119,8 @@ function validateHashtags(str) {
       return `Элемент содержит запрещенные символы: ${arr[i]}`;
     }
   }
-  console.log('Проверка на запрещенные символы пройдена');
-  console.log(`${str} ГОДЕН`);
+  // Проверка на запрещенные символы пройдена
+  // console.log(`${str} ГОДЕН`);
 
   const templateSuccess = findElement(document, '#success');
   const templateSection = findElement(templateSuccess.content, 'section');
@@ -125,8 +131,6 @@ function validateHashtags(str) {
   templateFragment.appendChild(successElement);
   return true;
 }
-
-// validateHashtags('#fdsfds #FDSFDS1 #vvxcvxc #12345');
 
 // function validateHashtagsLength(value) {
 //   return value.length >= 2 && value.length <= 20;
@@ -173,6 +177,22 @@ const onModalEscKeyDown = (evt) => {
   }
 };
 
+// const renderPicture = (image) => {
+//   bigPicture.querySelector('.big-picture__img img').src = card.url;
+//   bigPicture.querySelector('.likes-count').textContent = card.likes;
+//   bigPicture.querySelector('.comments-count').textContent = card.comments.length;
+//   bigPicture.querySelector('.social__caption').textContent = card.description;
+//   loadMoreButton.classList.remove('hidden');
+
+//   counter = 0;
+//   cardComments = card.comments;
+
+//   renderCommentsForCard(cardComments, counter);
+
+//   socialCommentsBlock.innerHTML = '';
+//   socialCommentsBlock.appendChild(commentsListFragment);
+// };
+
 // ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
 function openModal() {
   modalWindow.classList.remove('hidden');
@@ -180,7 +200,7 @@ function openModal() {
   body.classList.add('modal-open');
   // renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
-
+  pictureCancel.addEventListener('click', closeModal);
   const buttonMinus = findElement(document, '.scale__control--smaller');
   buttonMinus.addEventListener('click', minusScale);
   const buttonPlus = findElement(document, '.scale__control--bigger');
@@ -197,10 +217,6 @@ export function closeModal() {
   body.removeEventListener('keydown', onModalEscKeyDown);
   uploadFile.value = '';
 }
-
-pictureCancel.addEventListener('click', () => {
-  closeModal();
-});
 
 pictureCancel.addEventListener('keydown', (evt) => {
   if (isEnterKey(evt)) {
@@ -219,6 +235,83 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
+const defaultDescription = () => {
+  hashtagsField.value = '';
+  descriptionField.value = '';
+};
+
+// ---
+
+function callEventKeyboardSuccess(evt) {
+  if (evt.key === 'Escape') {
+    removeSuccessWindow();
+  }
+}
+function callMouseOfSuccess() {
+  removeSuccessWindow();
+}
+
+function removeWindow() {
+  const successClass = findElement(document, '.success');
+  successClass.removeEventListener('click', callMouseOfSuccess);
+  document.removeEventListener('keydown', callEventKeyboardSuccess);
+  successClass.remove();
+}
+
+function removeSuccessWindow(successButton) {
+  successButton.addEventListener('click', () => {
+    removeWindow();
+  });
+}
+
+function showMessageSuccess() {
+  const template = findElement(document, '#success');
+  const templateSuccess = findElement(template.content, '.success');
+  const copyOfSuccess = templateSuccess.cloneNode(true);
+  document.body.appendChild(copyOfSuccess);
+  const buttonSuccess = findElement(copyOfSuccess, '.success__button');
+  // createSuccessButton(buttonSuccess);
+  removeSuccessWindow(buttonSuccess);
+  document.addEventListener('keydown', callEventKeyboard);
+  const successWindow = findElement(document, '.success');
+  successWindow.addEventListener('click', callMouseOfError);
+}
+
+// ---
+function showMessageError() {
+  const template = findElement(document, '#error');
+  const templateError = findElement(template.content, '.error');
+  const copyOfError = templateError.cloneNode(true);
+  document.body.appendChild(copyOfError);
+  const buttonError = findElement(copyOfError, '.error__button');
+  createErrorButton(buttonError);
+  document.addEventListener('keydown', callEventKeyboard);
+  const errorWindow = findElement(document, '.error');
+  errorWindow.addEventListener('click', callMouseOfError);
+}
+
+function removeErrorWindow() {
+  const errorClass = findElement(document, '.error');
+  errorClass.removeEventListener('click', callMouseOfError);
+  document.removeEventListener('keydown', callEventKeyboard);
+  errorClass.remove();
+}
+
+function createErrorButton(errorButton) {
+  errorButton.addEventListener('click', () => {
+    removeErrorWindow();
+  });
+}
+
+function callEventKeyboard(evt) {
+  if (evt.key === 'Escape') {
+    removeErrorWindow();
+  }
+}
+function callMouseOfError() {
+  removeErrorWindow();
+}
+
 export const setUserFormSubmit = (onSuccess) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -228,11 +321,15 @@ export const setUserFormSubmit = (onSuccess) => {
       sendData(
         () => {
           onSuccess();
+          defaultFormData();
+          defaultDescription();
           unblockSubmitButton();
+          showMessageSuccess();
         },
         () => {
           showAlert('Не удалось отправить форму. Попробуйте ещё раз');
           unblockSubmitButton();
+          showMessageError();
         },
         new FormData(evt.target),
       );
@@ -240,20 +337,12 @@ export const setUserFormSubmit = (onSuccess) => {
   });
 };
 
-//     Заведите модуль, который будет отвечать за работу с формой.
-//     Пропишите тегу < form > правильные значения атрибутов method и адрес action для отправки формы на сервер.
-//         Обратите внимание.В разделе про работу с сетью мы доработаем механизм отправки данных, а пока достаточно правильных атрибутов у тега < form >.
-//         Если форма заполнена верно, то после отправки покажется страница сервера(по адресу из атрибута action тега form) с успешно отправленными данными.Если же форма пропустила какие - то некорректные значения, то будет показана страница с допущенными ошибками.В идеале у пользователя не должно быть сценария, при котором он может отправить некорректную форму.
-//     Проверьте разметку вашего проекта и добавьте недостающие атрибуты.Например, всем обязательным полям нужно добавить атрибут required.Затем проверьте, правильные ли типы стоят у нужных полей, если нет — проставьте правильные.
-//   Изучите, что значит загрузка изображения, и как, когда и каким образом показывается форма редактирования изображения.Напишите код и добавьте необходимые обработчики для реализации этого пункта техзадания.В работе вы можете опираться на код показа окна с полноразмерной фотографией, который вы, возможно, уже написали в предыдущей домашней работе.
-//     Важно.Подстановка выбранного изображения в форму — это отдельная домашняя работа.В данном задании этот пункт реализовывать не нужно.
-//     После реализуйте закрытие формы.
-//         Обратите внимание, что при закрытии формы дополнительно необходимо сбрасывать значение поля выбора файла #upload - file.В принципе, всё будет работать, если при повторной попытке загрузить в поле другую фотографию.Но! Событие change не сработает, если пользователь попробует загрузить ту же фотографию, а значит окно с формой не отобразится, что будет нарушением техзадания.Значение других полей формы также нужно сбрасывать.
-//     Напишите код для валидации формы добавления изображения.Список полей для валидации:
-// Хэш - теги
-// Комментарий
-//         На расширенном тарифе валидацию хэш - тегов делать не нужно.Достаточно проверки, что поле не пустое.
-//     Реализуйте логику проверки так, чтобы, как минимум, она срабатывала при попытке отправить форму и не давала этого сделать, если форма заполнена не по правилам.При желании, реализуйте проверки сразу при вводе значения в поле.
-// Как отменить обработчик Esc при фокусе ?
-//   Валидация хеш - тегов ?
-//     Поля, не перечисленные в техзадании, но существующие в разметке, особой валидации не требуют.
+const DEBOUNCE_DEFAULT_DELAY = 500;
+function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
+  let timeout;
+
+  return (...rest) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
