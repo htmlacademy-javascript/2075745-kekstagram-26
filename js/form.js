@@ -25,6 +25,7 @@ const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
 const form = findElement(document, '#upload-select-image');
+form.addEventListener('reset', defaultFormData);
 const pristine = new Pristine(form);
 // const pristine = new Pristine(form, {
 //   classTo: 'success',
@@ -176,22 +177,6 @@ const onModalEscKeyDown = (evt) => {
   }
 };
 
-// const renderPicture = (image) => {
-//   bigPicture.querySelector('.big-picture__img img').src = card.url;
-//   bigPicture.querySelector('.likes-count').textContent = card.likes;
-//   bigPicture.querySelector('.comments-count').textContent = card.comments.length;
-//   bigPicture.querySelector('.social__caption').textContent = card.description;
-//   loadMoreButton.classList.remove('hidden');
-
-//   counter = 0;
-//   cardComments = card.comments;
-
-//   renderCommentsForCard(cardComments, counter);
-
-//   socialCommentsBlock.innerHTML = '';
-//   socialCommentsBlock.appendChild(commentsListFragment);
-// };
-
 // ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
 function openModal() {
   modalWindow.classList.remove('hidden');
@@ -317,7 +302,6 @@ export const setUserFormSubmit = (onSuccess, onError) => {
           unblockSubmitButton();
           showMessageSuccess();
           form.reset();
-          defaultFormData();
         },
         () => {
           onError();

@@ -109,7 +109,7 @@ export const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-const DEBOUNCE_DEFAULT_DELAY = 500;
+export const DEBOUNCE_DEFAULT_DELAY = 500;
 export function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
   let timeout;
 

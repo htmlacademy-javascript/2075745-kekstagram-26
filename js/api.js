@@ -5,7 +5,7 @@ export const getData = (onSuccess) => {
     .then((response) => response.json())
     .then((messages) => {
       onSuccess(messages);
-      createPosts(messages);
+      // createPosts(messages);
     });
 };
 

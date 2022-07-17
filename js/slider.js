@@ -31,8 +31,6 @@ const effectLevelValue = findElement(document, '.effect-level__value');
 let currentEffect;
 
 // Установить значения по умолчанию
-// ? Надо будет потом проверить, когда успешной будет отправка фотографии
-
 export function defaultFormData() {
   imagePreview.classList.add('effects__preview--none');
   imagePreview.style.removeProperty('filter');

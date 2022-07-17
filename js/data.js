@@ -101,9 +101,6 @@ import { openModal } from './picture.js';
 //   };
 // };
 
-const imageFilter = findElement(document, '.img-filters');
-const imageFilters = findElement(document, '.img-filters__form');
-
 const AVATAR_COUNT = 6;
 export const arrPosts = [];
 export const createPosts = (messages) => {
@@ -128,6 +125,20 @@ export const createPosts = (messages) => {
   }
   );
   const loadingPictures = findElement(document, '.pictures');
+  let pictures = findElement(loadingPictures, '.picture');
+  while (pictures !== null) {
+    loadingPictures.removeChild(pictures);
+    pictures = findElement(loadingPictures, '.picture');
+  }
+
+  // ? foreach отказался работать
+  // if (pictures !== null) {
+  //   console.log(pictures);
+  //   pictures.forEach((picture) => {
+  //     console.log(picture);
+  //     loadingPictures.removeChild(picture);
+  //   });
+  // }
   loadingPictures.appendChild(templatePictureFragment);
 
   // imageFilter.classList.remove('img-filters--inactive');
