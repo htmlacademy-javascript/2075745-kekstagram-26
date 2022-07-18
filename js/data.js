@@ -1,5 +1,5 @@
-import { getRandomAvatar } from './utils.js';
-import { findElement } from './utils.js';
+import { getRandomAvatar, findElement } from './utils.js';
+// ? модули ссылаются друг на друга. Разорвать этот порочный круг data (arrPosts) <-> picture (openModal)
 import { openModal } from './picture.js';
 
 // const STANDARDMESSAGE = [
@@ -101,8 +101,11 @@ import { openModal } from './picture.js';
 //   };
 // };
 
+// Количество аватар авторов
 const AVATAR_COUNT = 6;
+// Массив загруженных картинок
 export const arrPosts = [];
+// Функция загрузки картинок. Возвращает массив картинок
 export const createPosts = (messages) => {
 
   const template = findElement(document, '#picture');
@@ -133,11 +136,6 @@ export const createPosts = (messages) => {
 
   loadingPictures.appendChild(templatePictureFragment);
 
-  // imageFilter.classList.remove('img-filters--inactive');
-  // console.log(imageFilter);
-  // const buttonFilter = imageFilters.firstElementChild('button');
-  // console.log(buttonFilter);
-
   //? Ещё сюда надо повесить нажатие Enter на картинку, чтобы открывалась
   loadingPictures.onclick = function (evt) {
     if (evt.target.tagName === 'IMG') {
@@ -154,5 +152,3 @@ export const createPosts = (messages) => {
   return arrPosts;
 };
 
-// const re = /^#[A - Za - zА - Яа - яЁе0 - 9]{ 1, 19 } $/;
-// console.log(re.test('#fdsf0df'));

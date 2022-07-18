@@ -1,6 +1,6 @@
 import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
 import { arrPosts } from './data.js';
-// ? модули ссылаются друг на друга. Разорвать этот порочный круг data <-> picture
+// ? модули ссылаются друг на друга. Разорвать этот порочный круг data (arrPosts) <-> picture (openModal)
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 // openWindow = findElement(document,''); // на картинки надо повесить открытие окна
@@ -87,10 +87,10 @@ function show5Comments() {
   socialCommentCount.innerHTML = countShownComments + strTemp;
 }
 commentsLoader.onclick = show5Comments;
-// addEventListener('click', show5Comments); // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
+//? addEventListener('click', show5Comments); // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
 
+// перерисовка новой картинки
 function renderPicture(image) {
-  // перерисовка новой картинки
   const img = findElement(pictureImg, 'img');
   img.src = image.src;
   img.alt = image.alt;

@@ -3,23 +3,27 @@ import { findElement } from './utils.js';
 const sliderElementValue = findElement(document, '.scale__control--value');
 const imagePreview = findElement(document, '.img-upload__preview img');
 
-const SCALE_STEP = 25;    // Шаг масштаба
+// Шаг масштаба
+const SCALE_STEP = 25;
+// Уменьшение масштаба картинки
 export function minusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value >= SCALE_STEP * 2) {
     sliderElementValue.value = `${value - SCALE_STEP}%`;
+    //? Как правильно? Вызов или подписка на событие?
     changeScale();
   }
 }
-
+// Увеличение масштаба картинки
 export function plusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value <= 100 - SCALE_STEP) {
     sliderElementValue.value = `${value + SCALE_STEP}%`;
+    //? Как правильно? Вызов или подписка на событие?
     changeScale();
   }
 }
-
+// Изменение масштаба
 export function changeScale() {
   const value = +sliderElementValue.value.slice(0, -1);
   imagePreview.style.transform = `scale(${value * 0.01})`;
@@ -32,7 +36,6 @@ let currentEffect;
 
 // Установить значения по умолчанию
 export function defaultFormData() {
-  imagePreview.classList.add('effects__preview--none');
   imagePreview.style.removeProperty('filter');
   imagePreview.style.removeProperty('transform');
   effectLevel.classList.add('hidden');

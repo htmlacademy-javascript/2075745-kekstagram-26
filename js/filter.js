@@ -1,22 +1,27 @@
 import { findElement, getShuffleArray } from './utils.js';
 
+// Количество картинок для загрузки
+//? Ну, вообще-то надо брать столько картинок, сколько даст сервер.
+// Смотреть техзадание, может там указано: вывести только 25
 const COUNT_PICTURES = 25;
+// Количество картинок для фильтра "10 случайных"
 const COUNT_RANDOM_PICTURES = 10;
 
 export const filterSection = findElement(document, '.img-filters');
 let activeFilter = findElement(filterSection, '.img-filters__button--active');
 
-//?
+// Для фильтра: по убыванию количество комментариев
 export const compareCommentsLength = (img1, img2) => img2.comments.length - img1.comments.length;
 
+// Выбор фильтра
 export const setActiveFilterClick = (callback) => {
   filterSection.addEventListener('click', (evt) => {
     if (evt.target.nodeName === 'BUTTON') {
-      // const BUTTON_ACTIVE_CLASS = 'img-filters__button--active';
-      if (!evt.target.classList.contains('img-filters__button--active')) {
-        activeFilter.classList.remove('img-filters__button--active');
-        evt.target.classList.add('img-filters__button--active');
-        activeFilter = findElement(document, '.img-filters__button--active');
+      const CLASS_ACTIVE_FILTER = 'img-filters__button--active';
+      if (!evt.target.classList.contains(CLASS_ACTIVE_FILTER)) {
+        activeFilter.classList.remove(CLASS_ACTIVE_FILTER);
+        evt.target.classList.add(CLASS_ACTIVE_FILTER);
+        activeFilter = findElement(document, `.${CLASS_ACTIVE_FILTER}`);
       }
 
       callback();
@@ -24,6 +29,7 @@ export const setActiveFilterClick = (callback) => {
   });
 };
 
+// Получить массив картинок
 export const getFilteredArray = (array) => {
   const arrayDefault = array.slice();
   let arrayFiltered;
