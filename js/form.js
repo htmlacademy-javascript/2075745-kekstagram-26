@@ -1,4 +1,4 @@
-import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, showAlert, elementAddEventClick } from './utils.js';
 import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
 
@@ -178,18 +178,17 @@ const onModalEscKeyDown = (evt) => {
 };
 const submitButton = findElement(form, '#upload-submit');
 
-// ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
 function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
   // renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
-  pictureCancel.addEventListener('click', closeModal);
-  const buttonMinus = findElement(document, '.scale__control--smaller');
-  buttonMinus.addEventListener('click', minusScale);
-  const buttonPlus = findElement(document, '.scale__control--bigger');
-  buttonPlus.addEventListener('click', plusScale);
+
+  elementAddEventClick(findElement(modalWindow, '#upload-cancel'), closeModal);
+  elementAddEventClick(findElement(document, '.scale__control--smaller'), minusScale);
+  elementAddEventClick(findElement(document, '.scale__control--bigger'), plusScale);
+
   const sliderElementValue = findElement(document, '.scale__control--value');
   sliderElementValue.onchange = changeScale;
   submitButton.focus();
@@ -232,6 +231,7 @@ function callMouseOfSuccess() {
 }
 
 function removeWindow() {
+
   const successClass = findElement(document, '.success');
   successClass.removeEventListener('click', callMouseOfSuccess);
   document.removeEventListener('keydown', callEventKeyboardSuccess);
@@ -249,12 +249,9 @@ function showMessageSuccess() {
   const templateSuccess = findElement(template.content, '.success');
   const copyOfSuccess = templateSuccess.cloneNode(true);
   document.body.appendChild(copyOfSuccess);
-  const buttonSuccess = findElement(copyOfSuccess, '.success__button');
-  // createSuccessButton(buttonSuccess);
-  removeSuccessWindow(buttonSuccess);
+  elementAddEventClick(findElement(copyOfSuccess, '.success__button'), removeWindow);
   document.addEventListener('keydown', callEventKeyboard);
-  const successWindow = findElement(document, '.success');
-  successWindow.addEventListener('click', callMouseOfSuccess);
+  elementAddEventClick(findElement(document, '.success'), callMouseOfSuccess);
 }
 
 function showMessageError() {
@@ -265,8 +262,7 @@ function showMessageError() {
   const buttonError = findElement(copyOfError, '.error__button');
   createErrorButton(buttonError);
   document.addEventListener('keydown', callEventKeyboard);
-  const errorWindow = findElement(document, '.error');
-  errorWindow.addEventListener('click', callMouseOfError);
+  elementAddEventClick(findElement(document, '.error'), callMouseOfError);
 }
 
 function removeErrorWindow() {

@@ -1,5 +1,4 @@
 import { getRandomAvatar, findElement, isEnterKey } from './utils.js';
-// ? модули ссылаются друг на друга. Разорвать этот порочный круг data (arrPosts) <-> picture (openModal)
 import { openModal } from './picture.js';
 
 // const STANDARDMESSAGE = [
@@ -103,13 +102,14 @@ import { openModal } from './picture.js';
 
 // Количество аватар авторов
 const AVATAR_COUNT = 6;
-// Массив загруженных картинок
-// export const arrPosts = []; //?
-// Функция загрузки картинок. Возвращает массив картинок
+
 //? После клика мышкой на картинку фокус вроде бы уже на другой картинке, а лайки и кол-во комментов по-прежнему отображается
 // ? на покидание фокуса мушки надо убрать эту информацию с превью картинки
+//
+// ?функции в модулях. А в main.js задавать названия элементов
+// ?возвращать функцией массив. Строки с переменными не писать
+// Функция загрузки картинок. Возвращает массив картинок
 export const createPosts = (messages, template) => {
-
   const templatePicture = findElement(template.content, '.picture');
   const templatePictureFragment = document.createDocumentFragment();
   const arrPosts = [];
@@ -140,7 +140,7 @@ export const createPosts = (messages, template) => {
     pictureLikes.textContent = row.likes;
   }
 
-  messages.forEach((item) => { //{ id, url, description, comments, likes }
+  messages.forEach((item) => {
     const photosElement = setupElement(templatePicture.cloneNode(true), item);
     setupPicture(findElement(photosElement, '.picture__img'), item);
     setupComments(findElement(photosElement, '.picture__comments'), item);

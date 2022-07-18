@@ -1,18 +1,10 @@
-import { findElement, isEnterKey, isEscapeKey, isCharNumber } from './utils.js';
-
-// ? модули ссылаются друг на друга. Разорвать этот порочный круг data (arrPosts) <-> picture (openModal)
+import { findElement, isEnterKey, isEscapeKey, isCharNumber, elementAddEventClick } from './utils.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
-// openWindow = findElement(document,''); // на картинки надо повесить открытие окна
-// const openWindow = document.querySelector('.setup-open');
-
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
-
 const socialCommentCount = findElement(modalWindow, '.social__comment-count');
 const commentsLoader = findElement(modalWindow, '.comments-loader');
-
-// templatePicture.addEventListener('click', openModal);
 
 const onModalEscKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -27,6 +19,7 @@ export function openModal(image) {
   body.classList.add('modal-open');
   renderPicture(findElement(pictureImg, 'img'), image);
   body.addEventListener('keydown', onModalEscKeyDown);
+  pictureCancel.focus();
 }
 
 function closeModal() {
@@ -34,6 +27,7 @@ function closeModal() {
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
   // ?надо ли чистить что-то за собой ? анти rendererPicture
+  // console.log(body.addEventListener);
   body.removeEventListener('keydown', onModalEscKeyDown);
 }
 
@@ -81,8 +75,6 @@ function show5Comments() {
   strTemp = strTemp.slice(j);
   socialCommentCount.innerHTML = countShownComments + strTemp;
 }
-commentsLoader.onclick = show5Comments; //? не долдно быть такого
-//? addEventListener('click', show5Comments); // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
 
 function setupLikes(likesCount, row) {
   likesCount.textContent = row.likes;
@@ -101,10 +93,10 @@ function setupCommentsCount(commentsCount, row) {
 }
 
 // перерисовка новой картинки
-function renderPicture(img, image) {
-  //{ id, url, description, comments, likes }
-  img.src = image.url;
-  img.alt = image.description;
+function renderPicture(picture, image) {
+
+  picture.src = image.url;
+  picture.alt = image.description;
   setupLikes(findElement(modalWindow, '.likes-count'), image);
   setupSocialPicture(findElement(modalWindow, '.social__picture'), image);
   setupSocialCaption(findElement(modalWindow, '.social__caption'), image);
@@ -137,14 +129,15 @@ function renderPicture(img, image) {
   }
   countShownComments = 0;
   show5Comments();
+  commentsLoader.onclick = show5Comments;
+  // addEventListener('click', show5Comments);
+  // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
+
+  elementAddEventClick(pictureCancel, closeModal);
+
+  pictureCancel.addEventListener('keydown', (evt) => {
+    if (isEnterKey(evt)) {
+      closeModal();
+    }
+  });
 }
-
-pictureCancel.addEventListener('click', () => {
-  closeModal();
-});
-
-pictureCancel.addEventListener('keydown', (evt) => {
-  if (isEnterKey(evt)) {
-    closeModal();
-  }
-});

@@ -23,7 +23,6 @@ export const setActiveFilterClick = (callback) => {
         evt.target.classList.add(CLASS_ACTIVE_FILTER);
         activeFilter = findElement(document, `.${CLASS_ACTIVE_FILTER}`);
       }
-
       callback();
     }
   });

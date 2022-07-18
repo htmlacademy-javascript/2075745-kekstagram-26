@@ -12,7 +12,7 @@ getData(
   (messages) => {
     createPosts(messages, findElement(document, '#picture'));
     setActiveFilterClick(debounce(
-      () => createPosts(getFilteredArray(messages, findElement(document, '#picture'))),
+      () => createPosts(getFilteredArray(messages), findElement(document, '#picture')),
       DEBOUNCE_DEFAULT_DELAY,
     ));
     filterSection.classList.remove('img-filters--inactive');

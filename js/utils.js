@@ -58,6 +58,10 @@ export const findElement = (container, selector) => {
   return container.querySelector(selector);
 };
 
+export function elementAddEventClick(element, fn) {
+  element.addEventListener('click', fn);
+}
+
 export const displayElementAdd = (container, selector, className) => {
   setCss(findElement(container, selector), className);
 };
