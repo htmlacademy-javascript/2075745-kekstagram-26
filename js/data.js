@@ -131,14 +131,6 @@ export const createPosts = (messages) => {
     pictures = findElement(loadingPictures, '.picture');
   }
 
-  // ? foreach отказался работать
-  // if (pictures !== null) {
-  //   console.log(pictures);
-  //   pictures.forEach((picture) => {
-  //     console.log(picture);
-  //     loadingPictures.removeChild(picture);
-  //   });
-  // }
   loadingPictures.appendChild(templatePictureFragment);
 
   // imageFilter.classList.remove('img-filters--inactive');
