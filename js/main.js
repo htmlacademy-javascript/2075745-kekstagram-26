@@ -1,7 +1,7 @@
 import { getData } from './api.js';
 import { closeModal, setUserFormSubmit } from './form.js';
 import { getFilteredArray, setActiveFilterClick, filterSection } from './filter.js';
-import { debounce, DEBOUNCE_DEFAULT_DELAY, showAlert } from './utils.js';
+import { findElement, debounce, DEBOUNCE_DEFAULT_DELAY, showAlert } from './utils.js';
 import { createPosts } from './data.js';
 
 setUserFormSubmit(closeModal, closeModal);
@@ -10,9 +10,9 @@ setUserFormSubmit(closeModal, closeModal);
 
 getData(
   (messages) => {
-    createPosts(messages);
+    createPosts(messages, findElement(document, '#picture'));
     setActiveFilterClick(debounce(
-      () => createPosts(getFilteredArray(messages)),
+      () => createPosts(getFilteredArray(messages, findElement(document, '#picture'))),
       DEBOUNCE_DEFAULT_DELAY,
     ));
     filterSection.classList.remove('img-filters--inactive');

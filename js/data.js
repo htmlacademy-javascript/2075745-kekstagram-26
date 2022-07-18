@@ -1,4 +1,4 @@
-import { getRandomAvatar, findElement } from './utils.js';
+import { getRandomAvatar, findElement, isEnterKey } from './utils.js';
 // ? модули ссылаются друг на друга. Разорвать этот порочный круг data (arrPosts) <-> picture (openModal)
 import { openModal } from './picture.js';
 
@@ -104,51 +104,62 @@ import { openModal } from './picture.js';
 // Количество аватар авторов
 const AVATAR_COUNT = 6;
 // Массив загруженных картинок
-export const arrPosts = [];
+// export const arrPosts = []; //?
 // Функция загрузки картинок. Возвращает массив картинок
-export const createPosts = (messages) => {
+//? После клика мышкой на картинку фокус вроде бы уже на другой картинке, а лайки и кол-во комментов по-прежнему отображается
+// ? на покидание фокуса мушки надо убрать эту информацию с превью картинки
+export const createPosts = (messages, template) => {
 
-  const template = findElement(document, '#picture');
   const templatePicture = findElement(template.content, '.picture');
   const templatePictureFragment = document.createDocumentFragment();
+  const arrPosts = [];
 
-  messages.forEach(({ id, url, description, comments, likes }) => {
-    const photosElement = templatePicture.cloneNode(true);
-    photosElement.id = `picture-${id}`;
-    const pictureImg = findElement(photosElement, '.picture__img');
-    pictureImg.src = url;
-    pictureImg.alt = description;
-    const pictureComments = findElement(photosElement, '.picture__comments');
-    pictureComments.textContent = comments.length;
-    const pictureLikes = findElement(photosElement, '.picture__likes');
-    pictureLikes.textContent = likes;
+  function setupElement(photosElement, item) {
+    photosElement.id = `picture-${item.id}`;
+    photosElement.addEventListener('click', () => {
+      openModal(item);
+    });
+    photosElement.addEventListener('keydown', (evt) => {
+      if (isEnterKey(evt)) {
+        openModal(item);
+      }
+    });
+    return photosElement;
+  }
+
+  function setupPicture(pictureImg, row) {
+    pictureImg.src = row.url;
+    pictureImg.alt = row.description;
+  }
+
+  function setupComments(pictureComments, row) {
+    pictureComments.textContent = row.comments.length;
+  }
+
+  function setupLikes(pictureLikes, row) {
+    pictureLikes.textContent = row.likes;
+  }
+
+  messages.forEach((item) => { //{ id, url, description, comments, likes }
+    const photosElement = setupElement(templatePicture.cloneNode(true), item);
+    setupPicture(findElement(photosElement, '.picture__img'), item);
+    setupComments(findElement(photosElement, '.picture__comments'), item);
+    setupLikes(findElement(photosElement, '.picture__likes'), item);
+
     templatePictureFragment.appendChild(photosElement);
-    const avatar = getRandomAvatar(AVATAR_COUNT);
-    arrPosts.push({ id, url, description, comments, likes, avatar });
+    item.avatar = getRandomAvatar(AVATAR_COUNT);
+    arrPosts.push(item);
   }
   );
-  const loadingPictures = findElement(document, '.pictures');
+
+  const loadingPictures = findElement(document, '.pictures'); //? заменить document
   let pictures = findElement(loadingPictures, '.picture');
   while (pictures !== null) {
     loadingPictures.removeChild(pictures);
     pictures = findElement(loadingPictures, '.picture');
   }
-
   loadingPictures.appendChild(templatePictureFragment);
 
-  //? Ещё сюда надо повесить нажатие Enter на картинку, чтобы открывалась
-  loadingPictures.onclick = function (evt) {
-    if (evt.target.tagName === 'IMG') {
-      const image = {
-        id: evt.target.parentElement.id,
-        src: evt.target.src,
-        alt: evt.target.alt,
-        comments: evt.target.nextElementSibling.firstElementChild.textContent,
-        likes: evt.target.nextElementSibling.lastElementChild.textContent,
-      };
-      openModal(image);
-    }
-  };
   return arrPosts;
 };
 
