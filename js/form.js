@@ -249,6 +249,8 @@ function showMessageSuccess() {
   const templateSuccess = findElement(template.content, '.success');
   const copyOfSuccess = templateSuccess.cloneNode(true);
   document.body.appendChild(copyOfSuccess);
+  // const buttonSuccess = findElement(copyOfSuccess, '.success__button');
+  // buttonSuccess.focus();
   elementAddEventClick(findElement(copyOfSuccess, '.success__button'), removeWindow);
   document.addEventListener('keydown', callEventKeyboard);
   elementAddEventClick(findElement(document, '.success'), callMouseOfSuccess);
@@ -261,6 +263,7 @@ function showMessageError() {
   document.body.appendChild(copyOfError);
   const buttonError = findElement(copyOfError, '.error__button');
   createErrorButton(buttonError);
+
   document.addEventListener('keydown', callEventKeyboard);
   elementAddEventClick(findElement(document, '.error'), callMouseOfError);
 }

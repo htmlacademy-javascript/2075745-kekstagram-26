@@ -108,58 +108,48 @@ const AVATAR_COUNT = 6;
 //
 // ?функции в модулях. А в main.js задавать названия элементов
 // ?возвращать функцией массив. Строки с переменными не писать
-// Функция загрузки картинок. Возвращает массив картинок
-export const createPosts = (messages, template) => {
-  const templatePicture = findElement(template.content, '.picture');
-  const templatePictureFragment = document.createDocumentFragment();
-  const arrPosts = [];
 
-  function setupElement(photosElement, item) {
-    photosElement.id = `picture-${item.id}`;
-    photosElement.addEventListener('click', () => {
+function setupElement(photosElement, item) {
+  photosElement.id = `picture-${item.id}`;
+  photosElement.addEventListener('click', () => {
+    openModal(item);
+  });
+  photosElement.addEventListener('keydown', (evt) => {
+    if (isEnterKey(evt)) {
       openModal(item);
-    });
-    photosElement.addEventListener('keydown', (evt) => {
-      if (isEnterKey(evt)) {
-        openModal(item);
-      }
-    });
-    return photosElement;
-  }
+    }
+  });
+  return photosElement;
+}
 
-  function setupPicture(pictureImg, row) {
-    pictureImg.src = row.url;
-    pictureImg.alt = row.description;
-  }
+function setupPicture(pictureImg, row) {
+  setupElement(pictureImg, row);
+  pictureImg.src = row.url;
+  pictureImg.alt = row.description;
+}
 
-  function setupComments(pictureComments, row) {
-    pictureComments.textContent = row.comments.length;
-  }
+function setupComments(pictureComments, row) {
+  pictureComments.textContent = row.comments.length;
+}
 
-  function setupLikes(pictureLikes, row) {
-    pictureLikes.textContent = row.likes;
-  }
+function setupLikes(pictureLikes, row) {
+  pictureLikes.textContent = row.likes;
+}
 
-  messages.forEach((item) => {
-    const photosElement = setupElement(templatePicture.cloneNode(true), item);
-    setupPicture(findElement(photosElement, '.picture__img'), item);
-    setupComments(findElement(photosElement, '.picture__comments'), item);
-    setupLikes(findElement(photosElement, '.picture__likes'), item);
+const setupItem = (container, item) => {
 
-    templatePictureFragment.appendChild(photosElement);
-    item.avatar = getRandomAvatar(AVATAR_COUNT);
-    arrPosts.push(item);
-  }
-  );
-
-  const loadingPictures = findElement(document, '.pictures'); //? заменить document
-  let pictures = findElement(loadingPictures, '.picture');
-  while (pictures !== null) {
-    loadingPictures.removeChild(pictures);
-    pictures = findElement(loadingPictures, '.picture');
-  }
-  loadingPictures.appendChild(templatePictureFragment);
-
-  return arrPosts;
+  setupPicture(container.querySelector('.picture__img'), item);
+  setupComments(container.querySelector('.picture__comments'), item);
+  setupLikes(container.querySelector('.picture__likes'), item);
+  item.avatar = getRandomAvatar(AVATAR_COUNT);
+  return container;
 };
+
+const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
+
+// Функция загрузки картинок. Возвращает массив картинок
+export const setupAllPhotos = (container, items, template) => {
+  container.append(...items.map(createPhotoFactory(template)));
+};
+
 
