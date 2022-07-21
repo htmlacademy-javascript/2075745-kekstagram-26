@@ -186,8 +186,8 @@ function openModal() {
   body.addEventListener('keydown', onModalEscKeyDown);
 
   elementAddEventClick(findElement(modalWindow, '#upload-cancel'), closeModal);
-  elementAddEventClick(findElement(document, '.scale__control--smaller'), minusScale);
-  elementAddEventClick(findElement(document, '.scale__control--bigger'), plusScale);
+  elementAddEventClick(findElement(modalWindow, '.scale__control--smaller'), minusScale);
+  elementAddEventClick(findElement(modalWindow, '.scale__control--bigger'), plusScale);
 
   const sliderElementValue = findElement(document, '.scale__control--value');
   sliderElementValue.onchange = changeScale;

@@ -79,6 +79,7 @@ effectLevel.classList.add('hidden');
 imagePreview.removeAttribute('style');
 effectsList.addEventListener('change', (evt) => {
   currentEffect = evt.target.value;
+  imagePreview.className = `effects__preview--${currentEffect}`;
   switch (currentEffect) {
     case 'chrome':
       effectLevel.classList.remove('hidden');
