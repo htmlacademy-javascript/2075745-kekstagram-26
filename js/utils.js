@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
 
@@ -25,11 +26,20 @@ function checkValidation(min, max) {
 
 export function getRandomPositiveInteger(min, max) {
   checkValidation(min, max);
+=======
+export function getRandom(min, max) {
+  min = Math.round(Math.abs(+min));
+  max = Math.round(Math.abs(+max));
+  [min, max] = max < min ? [max, min] : [min, max];
+  if (!(min && max)) { return false; };
+  console.log(`Min ${min}; Max ${max}`);
+>>>>>>> master
   return Math.round(Math.random() * (max - min) + min);
 }
 
 export const checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
+<<<<<<< HEAD
 export const getRandomArrayElement = (elements) =>
   elements[getRandomPositiveInteger(0, elements.length - 1)];
 
@@ -108,3 +118,14 @@ export const showAlert = (message) => {
     alertContainer.remove();
   }, ALERT_SHOW_TIME);
 };
+=======
+export function getRandomBooking(min, max, numberOfPoints) {
+  const rank = Math.pow(10, numberOfPoints);
+  min = Math.round(Math.abs(+min) * rank);
+  max = Math.round(Math.abs(+max) * rank);
+  [min, max] = max < min ? [max, min] : [min, max];
+  if (!(min && max)) { return false; };
+  console.log(`Min ${min / rank}; Max ${max / rank}`);
+  return Math.round(Math.random() * (max - min) + min) / rank;
+}
+>>>>>>> master
