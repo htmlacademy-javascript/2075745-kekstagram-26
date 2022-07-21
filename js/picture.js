@@ -40,6 +40,7 @@ function closeModal() {
 let countShownComments = 0;
 
 const STEP_SHOW_COMMENTS = 5;
+//? Говорят, можно сделать через slice
 function show5Comments() {
   const commentsCount = findElement(modalWindow, '.comments-count');
   const sumComments = +commentsCount.textContent;
@@ -59,7 +60,7 @@ function show5Comments() {
       commentsLoader.classList.add('hidden');
     }
     else {
-      for (let i = countShownComments; i < countShownComments + 5; i++) {
+      for (let i = countShownComments; i < countShownComments + STEP_SHOW_COMMENTS; i++) {
         socialComments.children[i].classList.remove('hidden');
       }
       countShownComments += STEP_SHOW_COMMENTS;
@@ -67,6 +68,7 @@ function show5Comments() {
     }
   }
 
+  // Установка количества показанных комментариев
   let strTemp = socialCommentCount.innerHTML;
   let j = 0;
   while (isCharNumber(strTemp[j])) {

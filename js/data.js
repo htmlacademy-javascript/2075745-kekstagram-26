@@ -1,4 +1,4 @@
-import { getRandomAvatar, findElement, isEnterKey } from './utils.js';
+import { getRandomAvatar, isEnterKey } from './utils.js';
 import { openModal } from './picture.js';
 
 // const STANDARDMESSAGE = [
@@ -108,6 +108,7 @@ const AVATAR_COUNT = 6;
 //
 // ?функции в модулях. А в main.js задавать названия элементов
 // ?возвращать функцией массив. Строки с переменными не писать
+// ?Для обработки валидности введенных данных убрать мигание
 
 function setupElement(photosElement, item) {
   photosElement.id = `picture-${item.id}`;
