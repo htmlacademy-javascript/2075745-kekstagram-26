@@ -6,8 +6,6 @@ import { setupAllPhotos } from './data.js';
 
 setUserFormSubmit(closeModal, closeModal);
 
-// getData(onSuccessMessage);
-
 getData(
   (messages) => {
     setupAllPhotos(findElement(document, '.pictures'),
