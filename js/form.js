@@ -99,7 +99,6 @@ function validateHashtags(str) {
     }
   }
   // Проверка на длину тегов пройдена
-  // основная версия
 
   for (let i = 0; i < arr.length; i++) {
     arr[i] = arr[i].toLowerCase();
