@@ -1,12 +1,19 @@
-import { createPosts } from './data.js';
-
-export const getData = (onSuccess) => {
+export const getData = (onSuccess, onFail) => {
   fetch('https://26.javascript.pages.academy/kekstagram/data')
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        onFail();
+      }
+    })
     .then((messages) => {
       onSuccess(messages);
-      createPosts(messages);
+    })
+    .catch(() => {
+      onFail();
     });
+
 };
 
 export const sendData = (onSuccess, onFail, body) => {
@@ -14,7 +21,6 @@ export const sendData = (onSuccess, onFail, body) => {
     'https://26.javascript.pages.academy/kekstagram',
     {
       method: 'POST',
-      // enctype: 'multipart/form-data',
       body,
     },
   )
@@ -22,18 +28,10 @@ export const sendData = (onSuccess, onFail, body) => {
       if (response.ok) {
         onSuccess();
       } else {
-        onFail('Не удалось отправить форму. Попробуйте ещё раз');
+        onFail();
       }
     })
     .catch(() => {
-      onFail('Не удалось отправить форму. Попробуйте ещё раз');
+      onFail();
     });
 };
-
-export function onSuccessMessage() {
-  console.log('Успешно');
-}
-
-export function onFailMessage() {
-  console.log('Неудачно');
-}

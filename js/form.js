@@ -1,4 +1,4 @@
-import { findElement, isEnterKey, isEscapeKey, showAlert } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, showAlert, elementAddEventClick } from './utils.js';
 import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
 
@@ -21,11 +21,11 @@ uploadFile.addEventListener('change', () => {
   openModal();
 });
 
-
 const modalWindow = findElement(document, '.img-upload__overlay');
 const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
 const form = findElement(document, '#upload-select-image');
+form.addEventListener('reset', defaultFormData);
 const pristine = new Pristine(form);
 // const pristine = new Pristine(form, {
 //   classTo: 'success',
@@ -176,37 +176,22 @@ const onModalEscKeyDown = (evt) => {
     closeModal();
   }
 };
+const submitButton = findElement(form, '#upload-submit');
 
-// const renderPicture = (image) => {
-//   bigPicture.querySelector('.big-picture__img img').src = card.url;
-//   bigPicture.querySelector('.likes-count').textContent = card.likes;
-//   bigPicture.querySelector('.comments-count').textContent = card.comments.length;
-//   bigPicture.querySelector('.social__caption').textContent = card.description;
-//   loadMoreButton.classList.remove('hidden');
-
-//   counter = 0;
-//   cardComments = card.comments;
-
-//   renderCommentsForCard(cardComments, counter);
-
-//   socialCommentsBlock.innerHTML = '';
-//   socialCommentsBlock.appendChild(commentsListFragment);
-// };
-
-// ?focus по-прежнему на основном окне, при нажатии на Enter снова открывается форма
 function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
   // renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
-  pictureCancel.addEventListener('click', closeModal);
-  const buttonMinus = findElement(document, '.scale__control--smaller');
-  buttonMinus.addEventListener('click', minusScale);
-  const buttonPlus = findElement(document, '.scale__control--bigger');
-  buttonPlus.addEventListener('click', plusScale);
+
+  elementAddEventClick(findElement(modalWindow, '#upload-cancel'), closeModal);
+  elementAddEventClick(findElement(modalWindow, '.scale__control--smaller'), minusScale);
+  elementAddEventClick(findElement(modalWindow, '.scale__control--bigger'), plusScale);
+
   const sliderElementValue = findElement(document, '.scale__control--value');
   sliderElementValue.onchange = changeScale;
+  submitButton.focus();
 }
 
 export function closeModal() {
@@ -224,7 +209,6 @@ pictureCancel.addEventListener('keydown', (evt) => {
   }
 });
 
-const submitButton = findElement(form, '#upload-submit');
 const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = 'Публикую...';
@@ -233,11 +217,6 @@ const blockSubmitButton = () => {
 const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = 'Опубликовать';
-};
-
-const defaultDescription = () => {
-  hashtagsField.value = '';
-  descriptionField.value = '';
 };
 
 // ---
@@ -252,6 +231,7 @@ function callMouseOfSuccess() {
 }
 
 function removeWindow() {
+
   const successClass = findElement(document, '.success');
   successClass.removeEventListener('click', callMouseOfSuccess);
   document.removeEventListener('keydown', callEventKeyboardSuccess);
@@ -269,15 +249,13 @@ function showMessageSuccess() {
   const templateSuccess = findElement(template.content, '.success');
   const copyOfSuccess = templateSuccess.cloneNode(true);
   document.body.appendChild(copyOfSuccess);
-  const buttonSuccess = findElement(copyOfSuccess, '.success__button');
-  // createSuccessButton(buttonSuccess);
-  removeSuccessWindow(buttonSuccess);
+  // const buttonSuccess = findElement(copyOfSuccess, '.success__button');
+  // buttonSuccess.focus();
+  elementAddEventClick(findElement(copyOfSuccess, '.success__button'), removeWindow);
   document.addEventListener('keydown', callEventKeyboard);
-  const successWindow = findElement(document, '.success');
-  successWindow.addEventListener('click', callMouseOfError);
+  elementAddEventClick(findElement(document, '.success'), callMouseOfSuccess);
 }
 
-// ---
 function showMessageError() {
   const template = findElement(document, '#error');
   const templateError = findElement(template.content, '.error');
@@ -285,9 +263,9 @@ function showMessageError() {
   document.body.appendChild(copyOfError);
   const buttonError = findElement(copyOfError, '.error__button');
   createErrorButton(buttonError);
+
   document.addEventListener('keydown', callEventKeyboard);
-  const errorWindow = findElement(document, '.error');
-  errorWindow.addEventListener('click', callMouseOfError);
+  elementAddEventClick(findElement(document, '.error'), callMouseOfError);
 }
 
 function removeErrorWindow() {
@@ -312,7 +290,7 @@ function callMouseOfError() {
   removeErrorWindow();
 }
 
-export const setUserFormSubmit = (onSuccess) => {
+export const setUserFormSubmit = (onSuccess, onError) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -321,13 +299,12 @@ export const setUserFormSubmit = (onSuccess) => {
       sendData(
         () => {
           onSuccess();
-          defaultFormData();
-          defaultDescription();
           unblockSubmitButton();
           showMessageSuccess();
+          form.reset();
         },
         () => {
-          showAlert('Не удалось отправить форму. Попробуйте ещё раз');
+          onError();
           unblockSubmitButton();
           showMessageError();
         },
@@ -336,13 +313,3 @@ export const setUserFormSubmit = (onSuccess) => {
     }
   });
 };
-
-const DEBOUNCE_DEFAULT_DELAY = 500;
-function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
-  let timeout;
-
-  return (...rest) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => callback.apply(this, rest), timeoutDelay);
-  };
-}
