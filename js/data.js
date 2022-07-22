@@ -51,6 +51,11 @@ const createPhotoFactory = (template) => (item) => setupItem(template.content.cl
 
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
+  // const sss = container.querySelector('.picture_img');
+  // console.log(sss);
+  // while (container.lastChild.nodeName === 'picture') {
+  //   container.removeChild(container.lastChild);
+  // }
   container.append(...items.map(createPhotoFactory(template)));
 };
 
