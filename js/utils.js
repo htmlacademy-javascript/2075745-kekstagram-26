@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> module11-task1
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
 
@@ -25,11 +29,26 @@ function checkValidation(min, max) {
 
 export function getRandomPositiveInteger(min, max) {
   checkValidation(min, max);
+<<<<<<< HEAD
+=======
+=======
+export function getRandom(min, max) {
+  min = Math.round(Math.abs(+min));
+  max = Math.round(Math.abs(+max));
+  [min, max] = max < min ? [max, min] : [min, max];
+  if (!(min && max)) { return false; };
+  console.log(`Min ${min}; Max ${max}`);
+>>>>>>> master
+>>>>>>> module11-task1
   return Math.round(Math.random() * (max - min) + min);
 }
 
 export const checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> module11-task1
 export const getRandomArrayElement = (elements) =>
   elements[getRandomPositiveInteger(0, elements.length - 1)];
 
@@ -60,6 +79,19 @@ export const findElement = (container, selector) => {
 
 export function elementAddEventClick(element, fn) {
   element.addEventListener('click', fn);
+<<<<<<< HEAD
+=======
+=======
+export function getRandomBooking(min, max, numberOfPoints) {
+  const rank = Math.pow(10, numberOfPoints);
+  min = Math.round(Math.abs(+min) * rank);
+  max = Math.round(Math.abs(+max) * rank);
+  [min, max] = max < min ? [max, min] : [min, max];
+  if (!(min && max)) { return false; };
+  console.log(`Min ${min / rank}; Max ${max / rank}`);
+  return Math.round(Math.random() * (max - min) + min) / rank;
+>>>>>>> master
+>>>>>>> module11-task1
 }
 
 export const displayElementAdd = (container, selector, className) => {
