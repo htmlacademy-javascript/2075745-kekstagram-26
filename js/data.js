@@ -49,7 +49,6 @@ const setupItem = (container, item) => {
 
 const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
 
-<<<<<<< HEAD
 // пустое изменение для соединения веток
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
@@ -58,10 +57,6 @@ export const setupAllPhotos = (container, items, template) => {
   // while (container.lastChild.nodeName === 'picture') {
   //   container.removeChild(container.lastChild);
   // }
-=======
-// Функция загрузки картинок. Возвращает массив картинок
-export const setupAllPhotos = (container, items, template) => {
->>>>>>> module11-task1
   container.append(...items.map(createPhotoFactory(template)));
 };
 
