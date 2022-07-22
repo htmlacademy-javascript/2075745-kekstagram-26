@@ -26,22 +26,12 @@ function closeModal() {
   modalWindow.classList.add('hidden');
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
-  // ?надо ли чистить что-то за собой ? анти rendererPicture
-  // console.log(body.addEventListener);
   body.removeEventListener('keydown', onModalEscKeyDown);
 }
 
-// общее число комментариев. Показываю первые пять. По нажатию еще пять.
-// все комментарии закрыты, кнопка скрыта.
-// Вызов (первый вызов): показать пять
-// если комментариев ноль - всё блокирую: ничего не делаю
-// если комментариев не больше 5: открываю оставшиеся комментарии, кнопку скрываю, число показанных комментариев = кол-ву комментариев
-//  иначе (комментариев больше 5): открываю пять комментариев, кнопка открыта, число показанных комментариев += 5
-// новый комментарий
 let countShownComments = 0;
 
 const STEP_SHOW_COMMENTS = 5;
-//? Говорят, можно сделать через slice
 function show5Comments() {
   const commentsCount = findElement(modalWindow, '.comments-count');
   const sumComments = +commentsCount.textContent;
@@ -133,8 +123,6 @@ function renderPicture(picture, image) {
   countShownComments = 0;
   show5Comments();
   commentsLoader.onclick = show5Comments;
-  // addEventListener('click', show5Comments);
-  // а если засунуть внутрь обновления картинки, то повиснет куча обработчиков, надо вешать на onclick
 
   elementAddEventClick(pictureCancel, closeModal);
 

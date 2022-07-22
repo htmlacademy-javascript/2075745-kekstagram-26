@@ -27,27 +27,6 @@ const pictureCancel = findElement(modalWindow, '#upload-cancel');
 const form = findElement(document, '#upload-select-image');
 form.addEventListener('reset', defaultFormData);
 const pristine = new Pristine(form);
-// const pristine = new Pristine(form, {
-//   classTo: 'success',
-//   errorTextParent: 'success',
-//   errorTextClass: 'error',
-// });
-
-// const pristine = new Pristine(form, {
-//   classTo: 'text__label',
-//   errorClass: 'text__label--invalid',
-//   successClass: 'text__label--valid',
-//   errorTextParent: 'text__label',
-//   errorTextTag: 'p',
-//   errorTextClass: 'text__error'
-// });
-
-// const resetForm = () => {
-//   uploadButton.value = '';
-//   hashtagsInput.textContent = '';
-//   commentArea.textContent = '';
-//   resetEffect();
-// };
 
 function validateHashtags(str) {
   const arr = [];
@@ -132,10 +111,6 @@ function validateHashtags(str) {
   return true;
 }
 
-// function validateHashtagsLength(value) {
-//   return value.length >= 2 && value.length <= 20;
-// }
-
 const MAX_LENGTH_DESCRIPTION = 140;
 function validateDescription(str) {
 
@@ -164,12 +139,6 @@ descriptionField.addEventListener('keydown', (evt) => {
   }
 });
 
-
-// __________________ Повтор кода picture.js
-// о чем говорится в задании
-// В работе вы можете опираться на код показа окна с полноразмерной фотографией, который вы, возможно, уже написали в предыдущей домашней работе.
-// renderPicture - другой
-
 const onModalEscKeyDown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -182,7 +151,6 @@ function openModal() {
   modalWindow.classList.remove('hidden');
   const body = findElement(document, 'body');
   body.classList.add('modal-open');
-  // renderPicture(image);
   body.addEventListener('keydown', onModalEscKeyDown);
 
   elementAddEventClick(findElement(modalWindow, '#upload-cancel'), closeModal);
@@ -198,7 +166,6 @@ export function closeModal() {
   modalWindow.classList.add('hidden');
   const body = findElement(document, 'body');
   body.classList.remove('modal-open');
-  // надо ли чистить что-то за собой ? анти rendererPicture
   body.removeEventListener('keydown', onModalEscKeyDown);
   uploadFile.value = '';
 }
@@ -218,8 +185,6 @@ const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = 'Опубликовать';
 };
-
-// ---
 
 function callEventKeyboardSuccess(evt) {
   if (evt.key === 'Escape') {
@@ -249,8 +214,6 @@ function showMessageSuccess() {
   const templateSuccess = findElement(template.content, '.success');
   const copyOfSuccess = templateSuccess.cloneNode(true);
   document.body.appendChild(copyOfSuccess);
-  // const buttonSuccess = findElement(copyOfSuccess, '.success__button');
-  // buttonSuccess.focus();
   elementAddEventClick(findElement(copyOfSuccess, '.success__button'), removeWindow);
   document.addEventListener('keydown', callEventKeyboard);
   elementAddEventClick(findElement(document, '.success'), callMouseOfSuccess);

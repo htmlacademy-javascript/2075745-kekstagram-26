@@ -1,15 +1,8 @@
-import { getRandomAvatar, isEnterKey } from './utils.js';
+import { getRandomAvatar, isEnterKey, findElement } from './utils.js';
 import { openModal } from './picture.js';
 
 // Количество аватар авторов
 const AVATAR_COUNT = 6;
-
-//? После клика мышкой на картинку фокус вроде бы уже на другой картинке, а лайки и кол-во комментов по-прежнему отображается
-// ? на покидание фокуса мушки надо убрать эту информацию с превью картинки
-//
-// ?функции в модулях. А в main.js задавать названия элементов
-// ?возвращать функцией массив. Строки с переменными не писать
-// ?Для обработки валидности введенных данных убрать мигание
 
 function setupElement(photosElement, item) {
   photosElement.id = `picture-${item.id}`;
@@ -49,14 +42,8 @@ const setupItem = (container, item) => {
 
 const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
 
-// пустое изменение для соединения веток
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
-  // const sss = container.querySelector('.picture_img');
-  // console.log(sss);
-  // while (container.lastChild.nodeName === 'picture') {
-  //   container.removeChild(container.lastChild);
-  // }
   container.append(...items.map(createPhotoFactory(template)));
 };
 
