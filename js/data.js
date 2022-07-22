@@ -1,4 +1,4 @@
-import { getRandomAvatar, isEnterKey, findElement } from './utils.js';
+import { getRandomAvatar, isEnterKey } from './utils.js';
 import { openModal } from './picture.js';
 
 // Количество аватар авторов

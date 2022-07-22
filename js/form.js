@@ -1,4 +1,4 @@
-import { findElement, isEnterKey, isEscapeKey, showAlert, elementAddEventClick } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, elementAddEventClick } from './utils.js';
 import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
 
@@ -26,103 +26,83 @@ const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
 const form = findElement(document, '#upload-select-image');
 form.addEventListener('reset', defaultFormData);
-const pristine = new Pristine(form);
-
-function validateHashtags(str) {
-  const arr = [];
-  const MAX_COUNT_HASHTAGS = 5;
-
-  const target = '#'; // цель поиска
-  let position = 0;
-  let foundPos = -2;
-  foundPos = str.indexOf(target, position);
-  while (foundPos !== -1) {
-    position = foundPos + 1; // продолжаем со следующей позиции
-    foundPos = str.indexOf(target, position);
-    arr.push(str.slice(position, (foundPos !== -1) ? foundPos : str.length));
-  }
-  if (str.length > 0 && arr.length === 0) {
-    showAlert('# не найден');
-    return '# не найден';
-  }
-  // Проверка на # пройдена
-
-  if (arr.length > MAX_COUNT_HASHTAGS) {
-    showAlert(`Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`);
-    return `Количество хэштегов больше ${MAX_COUNT_HASHTAGS}`;
-  }
-  // Проверка на количество хештегов пройдена
-
-  for (let i = 0; i < arr.length - 1; i++) {
-    if (arr[i].slice(-1) !== ' ') {
-      showAlert('Пробел не найден');
-      return 'Пробел не найден';
-    }
-  }
-
-  // Удаление пробелов в конце тегов
-  for (let i = 0; i < arr.length; i++) {
-    while ((arr[i].slice(-1) === ' ')) {
-      arr[i] = arr[i].slice(0, -1);
-    }
-  }
-
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i].length < 1) {
-      showAlert('Тег состоит только из #');
-      return 'Тег состоит только из #';
-    }
-    if (arr[i].length > 19) {
-      showAlert('Длина тега больше 20, включая #');
-      return 'Длина тега больше 20, включая #';
-    }
-  }
-  // Проверка на длину тегов пройдена
-
-  for (let i = 0; i < arr.length; i++) {
-    arr[i] = arr[i].toLowerCase();
-  }
-  const test = arr.filter((elem, pos, array) =>
-    (array.indexOf(elem.toLowerCase()) !== array.lastIndexOf(elem.toLowerCase()))
-  );
-
-  if (test.length > 0) {
-    showAlert(`Есть повторяющиеся элементы: ${test}`);
-    return `Есть повторяющиеся элементы: ${test}`;
-  }
-  // Тест на повторы пройден
-
-  for (let i = 0; i < arr.length; i++) {
-    if (!(/^[a-zA-Z0-9\d]+$/.test(arr[i]))) {
-      showAlert(`Элемент содержит запрещенные символы: ${arr[i]}`);
-      return `Элемент содержит запрещенные символы: ${arr[i]}`;
-    }
-  }
-  // Проверка на запрещенные символы пройдена
-  // console.log(`${str} ГОДЕН`);
-
-  const templateSuccess = findElement(document, '#success');
-  const templateSection = findElement(templateSuccess.content, 'section');
-  const templateFragment = document.createDocumentFragment();
-  const successElement = templateSection.cloneNode(true);
-  const successTitle = findElement(successElement, 'h2');
-  successTitle.textContent = 'Ошибка по умолчанию/Успешно';
-  templateFragment.appendChild(successElement);
-  return true;
-}
-
-const MAX_LENGTH_DESCRIPTION = 140;
-function validateDescription(str) {
-
-  if (str.length > MAX_LENGTH_DESCRIPTION) {
-    showAlert(`Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`);
-    return `Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`;
-  }
-  return true;
-}
-
 const hashtagsField = findElement(form, '.text__hashtags');
-pristine.addValidator(hashtagsField, validateHashtags);
+// const pristine = new Pristine(form);
+
+const pristine = new Pristine(form, {
+  classTo: 'text__label',
+  errorClass: 'text__label--invalid',
+  successClass: 'text__label--valid',
+  errorTextParent: 'text__label',
+  errorTextTag: 'p',
+  errorTextClass: 'text__error'
+});
+
+const getArrayFromString = (value) => value.toLowerCase().split(' ').filter(String);
+
+const HASHTAG_RULE = /^#[A-Za-z0-9]{1,19}$/;
+const validateHashtags = (value) => {
+  // при пустом поле возвращаем true
+  if (value.length === 0) {
+    return true;
+  }
+  return getArrayFromString(value).every((it) => HASHTAG_RULE.test(it));
+};
+
+const minLength = function (arr) {
+  let min = Number.MAX_VALUE;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].length < min) {
+      min = arr[i].length;
+    }
+  }
+  return min;
+};
+
+const maxLength = function (arr) {
+  let max = Number.EPSILON;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].length > max) {
+      max = arr[i].length;
+    }
+  }
+  return max;
+};
+
+const MAX_COUNT_HASHTAGS = 5;
+const checkHashtagCount = (value) => (getArrayFromString(value).length <= MAX_COUNT_HASHTAGS);
+const checkHashtagLengthMin = (value) => (getArrayFromString(value).length === 0 || minLength(getArrayFromString(value)) >= 2);
+const checkHashtagLengthMax = (value) => (maxLength(getArrayFromString(value)) <= 20);
+const checkDuplicate = (array) => [...new Set(array)].length === array.length;
+const checkHashtagRepeat = (value) => checkDuplicate(getArrayFromString(value));
+
+pristine.addValidator(
+  hashtagsField,
+  validateHashtags,
+  'Хештеги начинаются с #, разделяются пробелом'
+);
+
+pristine.addValidator(
+  hashtagsField,
+  checkHashtagCount,
+  `Количество тегов больше ${MAX_COUNT_HASHTAGS}`
+);
+
+pristine.addValidator(
+  hashtagsField,
+  checkHashtagLengthMin,
+  'Длина тега меньше 2'
+);
+pristine.addValidator(
+  hashtagsField,
+  checkHashtagLengthMax,
+  'Длина тега больше 20, включая #'
+);
+pristine.addValidator(
+  hashtagsField,
+  checkHashtagRepeat,
+  'Повторяющиеся теги'
+);
 
 hashtagsField.addEventListener('keydown', (evt) => {
   if (isEscapeKey) {
@@ -130,8 +110,16 @@ hashtagsField.addEventListener('keydown', (evt) => {
   }
 });
 
+const MAX_LENGTH_DESCRIPTION = 140;
+const validateDescription = (value) => value.length <= MAX_LENGTH_DESCRIPTION;
+
 const descriptionField = findElement(form, '.text__description');
-pristine.addValidator(descriptionField, validateDescription);
+
+pristine.addValidator(
+  descriptionField,
+  validateDescription,
+  `Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`
+);
 
 descriptionField.addEventListener('keydown', (evt) => {
   if (isEscapeKey) {
@@ -147,9 +135,9 @@ const onModalEscKeyDown = (evt) => {
 };
 const submitButton = findElement(form, '#upload-submit');
 
+const body = findElement(document, 'body');
 function openModal() {
   modalWindow.classList.remove('hidden');
-  const body = findElement(document, 'body');
   body.classList.add('modal-open');
   body.addEventListener('keydown', onModalEscKeyDown);
 
@@ -164,7 +152,6 @@ function openModal() {
 
 export function closeModal() {
   modalWindow.classList.add('hidden');
-  const body = findElement(document, 'body');
   body.classList.remove('modal-open');
   body.removeEventListener('keydown', onModalEscKeyDown);
   uploadFile.value = '';
@@ -186,72 +173,35 @@ const unblockSubmitButton = () => {
   submitButton.textContent = 'Опубликовать';
 };
 
-function callEventKeyboardSuccess(evt) {
-  if (evt.key === 'Escape') {
-    removeSuccessWindow();
-  }
-}
-function callMouseOfSuccess() {
-  removeSuccessWindow();
-}
+const renderMessage = (typeError, template) => {
+  const messageFragment = document.createDocumentFragment();
+  const message = template.cloneNode(true);
+  const button = message.querySelector(`.${typeError}__button`);
 
-function removeWindow() {
+  const closeMessage = () => {
+    message.remove();
+    document.removeEventListener('keydown', callEventKeyboard);
+  };
 
-  const successClass = findElement(document, '.success');
-  successClass.removeEventListener('click', callMouseOfSuccess);
-  document.removeEventListener('keydown', callEventKeyboardSuccess);
-  successClass.remove();
-}
-
-function removeSuccessWindow(successButton) {
-  successButton.addEventListener('click', () => {
-    removeWindow();
+  message.addEventListener('click', (evt) => {
+    if (evt.target.classList.contains(typeError)) {
+      closeMessage();
+    }
   });
-}
 
-function showMessageSuccess() {
-  const template = findElement(document, '#success');
-  const templateSuccess = findElement(template.content, '.success');
-  const copyOfSuccess = templateSuccess.cloneNode(true);
-  document.body.appendChild(copyOfSuccess);
-  elementAddEventClick(findElement(copyOfSuccess, '.success__button'), removeWindow);
+  button.addEventListener('click', closeMessage);
   document.addEventListener('keydown', callEventKeyboard);
-  elementAddEventClick(findElement(document, '.success'), callMouseOfSuccess);
-}
 
-function showMessageError() {
-  const template = findElement(document, '#error');
-  const templateError = findElement(template.content, '.error');
-  const copyOfError = templateError.cloneNode(true);
-  document.body.appendChild(copyOfError);
-  const buttonError = findElement(copyOfError, '.error__button');
-  createErrorButton(buttonError);
-
-  document.addEventListener('keydown', callEventKeyboard);
-  elementAddEventClick(findElement(document, '.error'), callMouseOfError);
-}
-
-function removeErrorWindow() {
-  const errorClass = findElement(document, '.error');
-  errorClass.removeEventListener('click', callMouseOfError);
-  document.removeEventListener('keydown', callEventKeyboard);
-  errorClass.remove();
-}
-
-function createErrorButton(errorButton) {
-  errorButton.addEventListener('click', () => {
-    removeErrorWindow();
-  });
-}
-
-function callEventKeyboard(evt) {
-  if (evt.key === 'Escape') {
-    removeErrorWindow();
+  function callEventKeyboard(evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closeMessage();
+    }
   }
-}
-function callMouseOfError() {
-  removeErrorWindow();
-}
+
+  messageFragment.appendChild(message);
+  body.appendChild(messageFragment);
+};
 
 export const setUserFormSubmit = (onSuccess, onError) => {
   form.addEventListener('submit', (evt) => {
@@ -263,13 +213,13 @@ export const setUserFormSubmit = (onSuccess, onError) => {
         () => {
           onSuccess();
           unblockSubmitButton();
-          showMessageSuccess();
+          renderMessage('success', findElement(findElement(document, '#success').content, '.success'));
           form.reset();
         },
         () => {
           onError();
           unblockSubmitButton();
-          showMessageError();
+          renderMessage('error', findElement(findElement(document, '#error').content, '.error'));
         },
         new FormData(evt.target),
       );
