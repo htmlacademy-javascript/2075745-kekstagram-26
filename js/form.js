@@ -1,8 +1,8 @@
 import { findElement, isEnterKey, isEscapeKey, elementAddEventClick } from './utils.js';
 import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
+import { TYPES_OF_FILE, HASHTAG_RULE, MAX_COUNT_HASHTAGS, MAX_LENGTH_DESCRIPTION } from './const.js';
 
-const TYPES_OF_FILE = ['gif', 'jpg', 'jpeg', 'png'];
 export const showPreviewImage = (input) => {
   const file = input.files[0];
   const fileName = file.name.toLowerCase();
@@ -40,7 +40,6 @@ const pristine = new Pristine(form, {
 
 const getArrayFromString = (value) => value.toLowerCase().split(' ').filter(String);
 
-const HASHTAG_RULE = /^#[A-Za-z0-9]{1,19}$/;
 const validateHashtags = (value) => {
   // при пустом поле возвращаем true
   if (value.length === 0) {
@@ -69,7 +68,6 @@ const maxLength = function (arr) {
   return max;
 };
 
-const MAX_COUNT_HASHTAGS = 5;
 const checkHashtagCount = (value) => (getArrayFromString(value).length <= MAX_COUNT_HASHTAGS);
 const checkHashtagLengthMin = (value) => (getArrayFromString(value).length === 0 || minLength(getArrayFromString(value)) >= 2);
 const checkHashtagLengthMax = (value) => (maxLength(getArrayFromString(value)) <= 20);
@@ -110,7 +108,6 @@ hashtagsField.addEventListener('keydown', (evt) => {
   }
 });
 
-const MAX_LENGTH_DESCRIPTION = 140;
 const validateDescription = (value) => value.length <= MAX_LENGTH_DESCRIPTION;
 
 const descriptionField = findElement(form, '.text__description');

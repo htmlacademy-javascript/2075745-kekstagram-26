@@ -1,3 +1,6 @@
+import { ALERT_SHOW_TIME } from './const.js';
+import { DEBOUNCE_DEFAULT_DELAY } from './const.js';
+
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
 
@@ -91,7 +94,6 @@ export const isEnterKey = (evt) => evt.key === 'Enter';
 
 export const isCharNumber = (char) => (char >= '0' && char <= '9');
 
-const ALERT_SHOW_TIME = 3000;
 export const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -113,7 +115,6 @@ export const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export const DEBOUNCE_DEFAULT_DELAY = 500;
 export function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
   let timeout;
 

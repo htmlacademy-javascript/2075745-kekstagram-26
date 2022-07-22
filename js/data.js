@@ -1,8 +1,6 @@
 import { getRandomAvatar, isEnterKey } from './utils.js';
 import { openModal } from './picture.js';
-
-// Количество аватар авторов
-const AVATAR_COUNT = 6;
+import { AVATAR_COUNT } from './const.js';
 
 function setupElement(photosElement, item) {
   photosElement.id = `picture-${item.id}`;

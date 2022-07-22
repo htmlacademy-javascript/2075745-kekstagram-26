@@ -1,4 +1,5 @@
 import { findElement, isEnterKey, isEscapeKey, isCharNumber, elementAddEventClick } from './utils.js';
+import { STEP_SHOW_COMMENTS } from './const.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 const pictureImg = findElement(modalWindow, '.big-picture__img');
@@ -31,7 +32,6 @@ function closeModal() {
 
 let countShownComments = 0;
 
-const STEP_SHOW_COMMENTS = 5;
 function show5Comments() {
   const commentsCount = findElement(modalWindow, '.comments-count');
   const sumComments = +commentsCount.textContent;
