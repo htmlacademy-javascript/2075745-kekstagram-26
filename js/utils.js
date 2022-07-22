@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> upstream/master
 function checkInteger(number) {
   if (!Number.isInteger(number)) {
 
