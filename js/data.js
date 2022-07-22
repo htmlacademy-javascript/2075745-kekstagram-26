@@ -49,6 +49,7 @@ const setupItem = (container, item) => {
 
 const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
 
+// пустое изменение для соединения веток
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
   // const sss = container.querySelector('.picture_img');
