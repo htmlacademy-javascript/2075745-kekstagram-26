@@ -42,8 +42,16 @@ const setupItem = (container, item) => {
 
 const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
 
+export const deleteOldPhotos = (container) => {
+  const element = container.querySelectorAll('.picture');
+  for (let i = 0; i < element.length; i++) {
+    element[i].remove();
+  }
+};
+
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
+  deleteOldPhotos(container);
   container.append(...items.map(createPhotoFactory(template)));
 };
 
