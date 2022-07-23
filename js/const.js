@@ -1,0 +1,9 @@
+export const SCALE_STEP = 25;
+export const TYPES_OF_FILE = ['gif', 'jpg', 'jpeg', 'png'];
+export const HASHTAG_RULE = /^#[A-Za-z0-9]{1,19}$/;
+export const MAX_COUNT_HASHTAGS = 5;
+export const MAX_LENGTH_DESCRIPTION = 140;
+export const STEP_SHOW_COMMENTS = 5;
+export const AVATAR_COUNT = 6;
+export const ALERT_SHOW_TIME = 3000;
+export const DEBOUNCE_DEFAULT_DELAY = 500;

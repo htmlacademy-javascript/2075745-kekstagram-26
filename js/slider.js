@@ -1,10 +1,9 @@
 import { findElement } from './utils.js';
+import { SCALE_STEP } from './const.js';
 
 const sliderElementValue = findElement(document, '.scale__control--value');
 const imagePreview = findElement(document, '.img-upload__preview img');
 
-// Шаг масштаба
-const SCALE_STEP = 25;
 // Уменьшение масштаба картинки
 export function minusScale() {
   const value = +sliderElementValue.value.slice(0, -1);
