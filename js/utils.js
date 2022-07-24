@@ -79,20 +79,6 @@ export const debounce = (callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) => {
   };
 };
 
-//?использовать при вводе хэштегов
-export const throttle = (callback, delayBetweenFrames) => {
-  let lastTime = 0;
-
-  return (...rest) => {
-    const now = new Date();
-
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-};
-
 // Перемешиваем массив
 export const getShuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {

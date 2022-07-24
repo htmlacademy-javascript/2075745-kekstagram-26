@@ -6,14 +6,6 @@ const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
 const commentsLoader = findElement(modalWindow, '.comments-loader');
 
-export const openModalPicture = (image) => {
-  modalWindow.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  renderPicture(findElement(pictureImg, 'img'), image);
-  document.body.addEventListener('keydown', onModalEscKeyDown);
-  pictureCancel.focus();
-};
-
 const closeModalPicture = () => {
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -78,7 +70,7 @@ const setupCommentsCount = (containerCommentsCount, row) => {
   containerCommentsCount.textContent = row.comments.length;
 };
 
-// перерисовка новой картинки
+// Перерисовка новой картинки
 const renderPicture = (picture, image) => {
 
   picture.src = image.url;
@@ -123,4 +115,12 @@ const renderPicture = (picture, image) => {
       closeModalPicture();
     }
   });
-}
+};
+
+export const openModalPicture = function (image) {
+  modalWindow.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  renderPicture(findElement(pictureImg, 'img'), image);
+  document.body.addEventListener('keydown', onModalEscKeyDown);
+  pictureCancel.focus();
+};

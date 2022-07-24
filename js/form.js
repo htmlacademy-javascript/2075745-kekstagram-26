@@ -150,17 +150,18 @@ pictureCancel.addEventListener('keydown', (evt) => {
   }
 });
 
-const blockSubmitButton = () => {
+export const blockSubmitButton = () => {
   submitButton.disabled = true;
   submitButton.textContent = 'Публикую...';
 };
 
-const unblockSubmitButton = () => {
+export const unblockSubmitButton = () => {
   submitButton.disabled = false;
   submitButton.textContent = 'Опубликовать';
 };
 
-const renderMessage = (typeError, template) => {
+const renderMessage = (typeError) => {
+  const template = findElement(findElement(document, `#${typeError}`).content, `.${typeError}`);
   const messageFragment = document.createDocumentFragment();
   const message = template.cloneNode(true);
   const button = message.querySelector(`.${typeError}__button`);
@@ -190,26 +191,27 @@ const renderMessage = (typeError, template) => {
   document.body.appendChild(messageFragment);
 };
 
-export const setUserFormSubmit = (onSuccess, onError) => {
+export const setUserFormSubmit = (onBegin, onComplite) => {
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
     if (isValid) {
-      blockSubmitButton();
+      onBegin();
       sendData(
         () => {
+          onComplite();
           closeModalForm();
-          unblockSubmitButton();
-          renderMessage('success', findElement(findElement(document, '#success').content, '.success'));
+          renderMessage('success');
           form.reset();
         },
         () => {
+          onComplite();
           closeModalForm();
-          unblockSubmitButton();
-          renderMessage('error', findElement(findElement(document, '#error').content, '.error'));
+          renderMessage('error');
         },
         new FormData(evt.target),
       );
     }
   });
 };
+
