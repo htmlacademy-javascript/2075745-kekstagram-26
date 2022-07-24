@@ -49,8 +49,6 @@ export const isEscapeKey = (evt) => evt.key === 'Escape';
 
 export const isEnterKey = (evt) => evt.key === 'Enter';
 
-export const isCharNumber = (char) => (char >= '0' && char <= '9');
-
 export const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';

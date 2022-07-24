@@ -29,12 +29,13 @@ function closeModal() {
 
 let countShownComments = 0;
 
-const showCommentsCount = findElement(document, '#show-comments-count');
+const showCommentsCount = findElement(modalWindow, '#show-comments-count');
+const commentsCount = findElement(modalWindow, '.comments-count');
+const socialComments = findElement(modalWindow, '.social__comments');
+const oneSocialComment = findElement(socialComments, '.social__comment');
 
 const show5Comments = () => {
-  const commentsCount = findElement(modalWindow, '.comments-count');
   const sumComments = +commentsCount.textContent;
-  const socialComments = findElement(document, '.social__comments');
 
   if (sumComments - countShownComments <= 0) {
     for (let i = 0; i < socialComments.children.length; i++) {
@@ -73,8 +74,8 @@ const setupSocialCaption = (socialCaption, row) => {
   socialCaption.textContent = row.description;
 };
 
-const setupCommentsCount = (commentsCount, row) => {
-  commentsCount.textContent = row.comments.length;
+const setupCommentsCount = (containerCommentsCount, row) => {
+  containerCommentsCount.textContent = row.comments.length;
 };
 
 // перерисовка новой картинки
@@ -85,10 +86,8 @@ function renderPicture(picture, image) {
   setupLikes(findElement(modalWindow, '.likes-count'), image);
   setupSocialPicture(findElement(modalWindow, '.social__picture'), image);
   setupSocialCaption(findElement(modalWindow, '.social__caption'), image);
-  setupCommentsCount(findElement(modalWindow, '.comments-count'), image);
+  setupCommentsCount(commentsCount, image);
 
-  const socialComments = findElement(document, '.social__comments');
-  const oneSocialComment = findElement(socialComments, '.social__comment');
   const templateCommentFragment = document.createDocumentFragment();
 
   const setupAvatar = (avatar, row) => {

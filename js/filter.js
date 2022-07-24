@@ -14,7 +14,7 @@ export const setActiveFilterClick = (callback) => {
       if (!evt.target.classList.contains(CLASS_ACTIVE_FILTER)) {
         activeFilter.classList.remove(CLASS_ACTIVE_FILTER);
         evt.target.classList.add(CLASS_ACTIVE_FILTER);
-        activeFilter = findElement(document, `.${CLASS_ACTIVE_FILTER}`);
+        activeFilter = findElement(filterSection, `.${CLASS_ACTIVE_FILTER}`);
       }
       callback();
     }

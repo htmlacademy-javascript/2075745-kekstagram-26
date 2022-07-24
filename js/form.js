@@ -3,28 +3,30 @@ import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
 import { TYPES_OF_FILE, HASHTAG_RULE, MAX_COUNT_HASHTAGS, MIN_LENGTH_HASHTAG, MAX_LENGTH_DESCRIPTION, MAX_LENGTH_HASHTAG } from './const.js';
 
+const form = findElement(document, '#upload-select-image');
+const uploadFile = findElement(form, '#upload-file');
+const modalWindow = findElement(form, '.img-upload__overlay');
+const imagePreview = findElement(modalWindow, '.img-upload__preview img');
+const pictureCancel = findElement(modalWindow, '#upload-cancel');
+const scaleSmaller = findElement(modalWindow, '.scale__control--smaller');
+const scaleBigger = findElement(modalWindow, '.scale__control--bigger');
+
 export const showPreviewImage = (input) => {
   const file = input.files[0];
   const fileName = file.name.toLowerCase();
-
   const matches = TYPES_OF_FILE.some((it) => fileName.endsWith(it));
-  const imagePreview = findElement(document, '.img-upload__preview img');
 
   if (matches) {
     imagePreview.src = URL.createObjectURL(file);
   }
 };
 
-const uploadFile = findElement(document, '#upload-file');
 uploadFile.addEventListener('change', () => {
   showPreviewImage(uploadFile);
   openModal();
 });
 
-const modalWindow = findElement(document, '.img-upload__overlay');
-const pictureCancel = findElement(modalWindow, '#upload-cancel');
 
-const form = findElement(document, '#upload-select-image');
 form.addEventListener('reset', defaultFormData);
 const hashtagsField = findElement(form, '.text__hashtags');
 
@@ -117,17 +119,16 @@ const onModalEscKeyDown = (evt) => {
 };
 const submitButton = findElement(form, '#upload-submit');
 
-onElementClick(findElement(modalWindow, '#upload-cancel'), closeModal);
-onElementClick(findElement(modalWindow, '.scale__control--smaller'), minusScale);
-onElementClick(findElement(modalWindow, '.scale__control--bigger'), plusScale);
 const sliderElementValue = findElement(modalWindow, '.scale__control--value');
 
 function openModal() {
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
   document.body.addEventListener('keydown', onModalEscKeyDown);
-
-  sliderElementValue.onchange = changeScale;
+  onElementClick(pictureCancel, closeModal);
+  onElementClick(scaleSmaller, minusScale);
+  onElementClick(scaleBigger, plusScale);
+  sliderElementValue.addEventListener('change', changeScale);
   submitButton.focus();
 }
 
@@ -135,7 +136,10 @@ export function closeModal() {
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.body.removeEventListener('keydown', onModalEscKeyDown);
-  uploadFile.value = '';
+  pictureCancel.removeEventListener('click', closeModal);
+  scaleSmaller.removeEventListener('click', minusScale);
+  scaleBigger.removeEventListener('click', plusScale);
+  sliderElementValue.removeEventListener('change', changeScale);
   form.reset();
 }
 

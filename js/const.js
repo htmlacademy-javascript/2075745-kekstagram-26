@@ -16,3 +16,4 @@ export const COUNT_RANDOM_PICTURES = 10;
 export const GET_DATA_SERVER = 'https://26.javascript.pages.academy/kekstagram/data';
 export const POST_DATA_SERVER = 'https://26.javascript.pages.academy/kekstagram';
 export const CLASS_ACTIVE_FILTER = 'img-filters__button--active';
+export const EFFECTS_NONE = 'effects__preview--none';

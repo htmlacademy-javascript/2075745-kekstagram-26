@@ -1,8 +1,9 @@
 import { findElement } from './utils.js';
-import { SCALE_STEP } from './const.js';
+import { SCALE_STEP, EFFECTS_NONE } from './const.js';
 
 const sliderElementValue = findElement(document, '.scale__control--value');
 const imagePreview = findElement(document, '.img-upload__preview img');
+let currentEffectClass = EFFECTS_NONE;
 
 // Изменение масштаба
 export const changeScale = () => {
@@ -33,6 +34,8 @@ let currentEffect;
 
 // Установить значения по умолчанию
 export const defaultFormData = () => {
+  imagePreview.classList.remove(currentEffectClass);
+  imagePreview.classList.add(EFFECTS_NONE);
   imagePreview.style.removeProperty('filter');
   imagePreview.style.removeProperty('transform');
   effectLevel.classList.add('hidden');
@@ -73,10 +76,11 @@ effectLevelSlider.noUiSlider.on('update', () => {
 
 const effectsList = findElement(document, '.effects__list');
 effectLevel.classList.add('hidden');
-imagePreview.removeAttribute('style');
 effectsList.addEventListener('change', (evt) => {
   currentEffect = evt.target.value;
-  imagePreview.className = `effects__preview--${currentEffect}`;
+  imagePreview.classList.remove(currentEffectClass);
+  currentEffectClass = `effects__preview--${currentEffect}`;
+  imagePreview.classList.add(currentEffectClass);
   switch (currentEffect) {
     case 'chrome':
       effectLevel.classList.remove('hidden');
@@ -141,3 +145,4 @@ effectsList.addEventListener('change', (evt) => {
       throw new Error(evt.target.value);
   }
 });
+

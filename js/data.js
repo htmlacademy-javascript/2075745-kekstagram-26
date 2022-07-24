@@ -31,7 +31,6 @@ const setupLikes = (pictureLikes, row) => {
 };
 
 const setupItem = (container, item) => {
-
   setupPicture(container.querySelector('.picture__img'), item);
   setupComments(container.querySelector('.picture__comments'), item);
   setupLikes(container.querySelector('.picture__likes'), item);
