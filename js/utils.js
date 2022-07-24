@@ -1,56 +1,36 @@
-function checkInteger(number) {
-  if (!Number.isInteger(number)) {
+import { ALERT_SHOW_TIME, DEBOUNCE_DEFAULT_DELAY } from './const.js';
 
+const checkInteger = (number) => {
+  if (!Number.isInteger(number)) {
     throw new Error(`Число ${number} не integer, не целое`);
   }
-}
+};
 
-function checkPositive(number) {
+const checkPositive = (number) => {
   if (number < 0) {
     throw new Error(`Число ${number} отрицательное`);
   }
-}
-function checkMinMax(left, right) {
+};
+const checkMinMax = (left, right) => {
   if (left >= right) {
     throw new Error('Левый параметр не меньше правого');
   }
-}
+};
 
-function checkValidation(min, max) {
+const checkValidation = (min, max) => {
   checkInteger(min);
   checkInteger(max);
   checkPositive(min);
   checkMinMax(min, max);
-}
+};
 
-export function getRandomPositiveInteger(min, max) {
+export const getRandomPositiveInteger = (min, max) => {
   checkValidation(min, max);
   return Math.round(Math.random() * (max - min) + min);
-}
-
-export const checkLength = (anyString, maxLength) => (anyString.length <= maxLength);
-
-export const getRandomArrayElement = (elements) =>
-  elements[getRandomPositiveInteger(0, elements.length - 1)];
-
-export const getRandomMessage = (elements) =>
-  getRandomPositiveInteger(0, 1) ? elements[getRandomPositiveInteger(0, elements.length - 1)] : elements[getRandomPositiveInteger(0, elements.length - 1)] + elements[getRandomPositiveInteger(0, elements.length - 1)];
-
-export const getRandomPhoto = function (length) {
-  return `photos/${getRandomPositiveInteger(1, length)}.jpg`;
 };
 
-export const getRandomAvatar = function (length) {
-  return `img/avatar-${getRandomPositiveInteger(1, length)}.svg`;
-};
+export const getRandomAvatar = (length) => `img/avatar-${getRandomPositiveInteger(1, length)}.svg`;
 
-
-const setCss = (htmlElement, className) => {
-  if (htmlElement === null) {
-    return;
-  }
-  htmlElement.classList.add(className);
-};
 export const findElement = (container, selector) => {
   if (container === null) {
     return null;
@@ -58,40 +38,17 @@ export const findElement = (container, selector) => {
   return container.querySelector(selector);
 };
 
-export function elementAddEventClick(element, fn) {
+export const onElementClick = (element, fn) => {
+  if (element === null) {
+    return null;
+  }
   element.addEventListener('click', fn);
-}
-
-export const displayElementAdd = (container, selector, className) => {
-  setCss(findElement(container, selector), className);
-};
-
-export const createCounter = (start = 0, step = 1) => {
-  let counter = start;
-  return (
-    {
-      inc: () => {
-        const result = counter;
-        counter += step;
-        return result;
-      },
-      dec: () => {
-        const result = counter;
-        counter -= step;
-        return result;
-      },
-      value: () => counter,
-    });
-
 };
 
 export const isEscapeKey = (evt) => evt.key === 'Escape';
 
 export const isEnterKey = (evt) => evt.key === 'Enter';
 
-export const isCharNumber = (char) => (char >= '0' && char <= '9');
-
-const ALERT_SHOW_TIME = 3000;
 export const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -113,28 +70,14 @@ export const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export const DEBOUNCE_DEFAULT_DELAY = 500;
-export function debounce(callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) {
+export const debounce = (callback, timeoutDelay = DEBOUNCE_DEFAULT_DELAY) => {
   let timeout;
 
   return (...rest) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
-
-export function throttle(callback, delayBetweenFrames) {
-  let lastTime = 0;
-
-  return (...rest) => {
-    const now = new Date();
-
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
-  };
-}
+};
 
 // Перемешиваем массив
 export const getShuffleArray = (array) => {

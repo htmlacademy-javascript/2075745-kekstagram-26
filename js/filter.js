@@ -1,12 +1,5 @@
-import { findElement, getShuffleArray } from './utils.js';
-
-// ? что сломалось. Предыдущие картинки не удаляются с экрана
-// Количество картинок для загрузки
-//? Ну, вообще-то надо брать столько картинок, сколько даст сервер.
-// Смотреть техзадание, может там указано: вывести только 25
-const COUNT_PICTURES = 25;
-// Количество картинок для фильтра "10 случайных"
-const COUNT_RANDOM_PICTURES = 10;
+import { findElement, getShuffleArray, onElementClick } from './utils.js';
+import { COUNT_PICTURES, COUNT_RANDOM_PICTURES, CLASS_ACTIVE_FILTER } from './const.js';
 
 export const filterSection = findElement(document, '.img-filters');
 let activeFilter = findElement(filterSection, '.img-filters__button--active');
@@ -16,13 +9,12 @@ export const compareCommentsLength = (img1, img2) => img2.comments.length - img1
 
 // Выбор фильтра
 export const setActiveFilterClick = (callback) => {
-  filterSection.addEventListener('click', (evt) => {
+  onElementClick(filterSection, (evt) => {
     if (evt.target.nodeName === 'BUTTON') {
-      const CLASS_ACTIVE_FILTER = 'img-filters__button--active';
       if (!evt.target.classList.contains(CLASS_ACTIVE_FILTER)) {
         activeFilter.classList.remove(CLASS_ACTIVE_FILTER);
         evt.target.classList.add(CLASS_ACTIVE_FILTER);
-        activeFilter = findElement(document, `.${CLASS_ACTIVE_FILTER}`);
+        activeFilter = findElement(filterSection, `.${CLASS_ACTIVE_FILTER}`);
       }
       callback();
     }

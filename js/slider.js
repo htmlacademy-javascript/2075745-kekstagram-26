@@ -1,33 +1,31 @@
 import { findElement } from './utils.js';
+import { SCALE_STEP, EFFECTS_NONE } from './const.js';
 
 const sliderElementValue = findElement(document, '.scale__control--value');
 const imagePreview = findElement(document, '.img-upload__preview img');
+let currentEffectClass = EFFECTS_NONE;
 
-// Шаг масштаба
-const SCALE_STEP = 25;
+// Изменение масштаба
+export const changeScale = () => {
+  const value = +sliderElementValue.value.slice(0, -1);
+  imagePreview.style.transform = `scale(${value * 0.01})`;
+};
 // Уменьшение масштаба картинки
-export function minusScale() {
+export const minusScale = () => {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value >= SCALE_STEP * 2) {
     sliderElementValue.value = `${value - SCALE_STEP}%`;
-    //? Как правильно? Вызов или подписка на событие?
     changeScale();
   }
-}
+};
 // Увеличение масштаба картинки
-export function plusScale() {
+export const plusScale = () => {
   const value = +sliderElementValue.value.slice(0, -1);
   if (value <= 100 - SCALE_STEP) {
     sliderElementValue.value = `${value + SCALE_STEP}%`;
-    //? Как правильно? Вызов или подписка на событие?
     changeScale();
   }
-}
-// Изменение масштаба
-export function changeScale() {
-  const value = +sliderElementValue.value.slice(0, -1);
-  imagePreview.style.transform = `scale(${value * 0.01})`;
-}
+};
 
 const effectLevel = findElement(document, '.effect-level');
 const effectLevelSlider = findElement(document, '.effect-level__slider');
@@ -35,11 +33,13 @@ const effectLevelValue = findElement(document, '.effect-level__value');
 let currentEffect;
 
 // Установить значения по умолчанию
-export function defaultFormData() {
+export const defaultFormData = () => {
+  imagePreview.classList.remove(currentEffectClass);
+  imagePreview.classList.add(EFFECTS_NONE);
   imagePreview.style.removeProperty('filter');
   imagePreview.style.removeProperty('transform');
   effectLevel.classList.add('hidden');
-}
+};
 
 noUiSlider.create(effectLevelSlider, {
   range: {
@@ -70,16 +70,17 @@ effectLevelSlider.noUiSlider.on('update', () => {
       imagePreview.style.filter = `brightness(${effectLevelValue.value})`;
       break;
     default:
-    // console.log(currentEffect);
+
   }
 });
 
 const effectsList = findElement(document, '.effects__list');
 effectLevel.classList.add('hidden');
-imagePreview.removeAttribute('style');
 effectsList.addEventListener('change', (evt) => {
   currentEffect = evt.target.value;
-  imagePreview.className = `effects__preview--${currentEffect}`;
+  imagePreview.classList.remove(currentEffectClass);
+  currentEffectClass = `effects__preview--${currentEffect}`;
+  imagePreview.classList.add(currentEffectClass);
   switch (currentEffect) {
     case 'chrome':
       effectLevel.classList.remove('hidden');
@@ -144,3 +145,4 @@ effectsList.addEventListener('change', (evt) => {
       throw new Error(evt.target.value);
   }
 });
+

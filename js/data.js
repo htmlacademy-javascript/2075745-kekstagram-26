@@ -1,45 +1,36 @@
-import { getRandomAvatar, isEnterKey } from './utils.js';
-import { openModal } from './picture.js';
+import { getRandomAvatar, isEnterKey, onElementClick } from './utils.js';
+import { openModalPicture } from './picture.js';
+import { AVATAR_COUNT } from './const.js';
 
-// Количество аватар авторов
-const AVATAR_COUNT = 6;
-
-//? После клика мышкой на картинку фокус вроде бы уже на другой картинке, а лайки и кол-во комментов по-прежнему отображается
-// ? на покидание фокуса мушки надо убрать эту информацию с превью картинки
-//
-// ?функции в модулях. А в main.js задавать названия элементов
-// ?возвращать функцией массив. Строки с переменными не писать
-// ?Для обработки валидности введенных данных убрать мигание
-
-function setupElement(photosElement, item) {
+const setupElement = (photosElement, item) => {
   photosElement.id = `picture-${item.id}`;
-  photosElement.addEventListener('click', () => {
-    openModal(item);
+  onElementClick(photosElement, () => {
+    openModalPicture(item);
   });
   photosElement.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {
-      openModal(item);
+      openModalPicture(item);
     }
   });
   return photosElement;
-}
+};
 
-function setupPicture(pictureImg, row) {
+const setupPicture = (pictureImg, row) => {
   setupElement(pictureImg, row);
   pictureImg.src = row.url;
   pictureImg.alt = row.description;
-}
+  pictureImg.loading = 'lazy';
+};
 
-function setupComments(pictureComments, row) {
+const setupComments = (pictureComments, row) => {
   pictureComments.textContent = row.comments.length;
-}
+};
 
-function setupLikes(pictureLikes, row) {
+const setupLikes = (pictureLikes, row) => {
   pictureLikes.textContent = row.likes;
-}
+};
 
 const setupItem = (container, item) => {
-
   setupPicture(container.querySelector('.picture__img'), item);
   setupComments(container.querySelector('.picture__comments'), item);
   setupLikes(container.querySelector('.picture__likes'), item);
@@ -49,14 +40,16 @@ const setupItem = (container, item) => {
 
 const createPhotoFactory = (template) => (item) => setupItem(template.content.cloneNode(true), item);
 
-// пустое изменение для соединения веток
+export const deleteOldPhotos = (container) => {
+  const element = container.querySelectorAll('.picture');
+  for (let i = 0; i < element.length; i++) {
+    element[i].remove();
+  }
+};
+
 // Функция загрузки картинок. Возвращает массив картинок
 export const setupAllPhotos = (container, items, template) => {
-  // const sss = container.querySelector('.picture_img');
-  // console.log(sss);
-  // while (container.lastChild.nodeName === 'picture') {
-  //   container.removeChild(container.lastChild);
-  // }
+  deleteOldPhotos(container);
   container.append(...items.map(createPhotoFactory(template)));
 };
 
