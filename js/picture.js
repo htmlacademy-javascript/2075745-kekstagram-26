@@ -6,25 +6,25 @@ const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
 const commentsLoader = findElement(modalWindow, '.comments-loader');
 
-const onModalEscKeyDown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeModal();
-  }
-};
-
-export function openModal(image) {
+export const openModalPicture = (image) => {
   modalWindow.classList.remove('hidden');
   document.body.classList.add('modal-open');
   renderPicture(findElement(pictureImg, 'img'), image);
   document.body.addEventListener('keydown', onModalEscKeyDown);
   pictureCancel.focus();
-}
+};
 
-function closeModal() {
+const closeModalPicture = () => {
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.body.removeEventListener('keydown', onModalEscKeyDown);
+};
+
+function onModalEscKeyDown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeModalPicture();
+  }
 }
 
 let countShownComments = 0;
@@ -79,7 +79,7 @@ const setupCommentsCount = (containerCommentsCount, row) => {
 };
 
 // перерисовка новой картинки
-function renderPicture(picture, image) {
+const renderPicture = (picture, image) => {
 
   picture.src = image.url;
   picture.alt = image.description;
@@ -116,11 +116,11 @@ function renderPicture(picture, image) {
   show5Comments();
   commentsLoader.onclick = show5Comments;
 
-  onElementClick(pictureCancel, closeModal);
+  onElementClick(pictureCancel, closeModalPicture);
 
   pictureCancel.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {
-      closeModal();
+      closeModalPicture();
     }
   });
 }

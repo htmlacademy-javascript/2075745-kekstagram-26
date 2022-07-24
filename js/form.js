@@ -21,12 +21,6 @@ export const showPreviewImage = (input) => {
   }
 };
 
-uploadFile.addEventListener('change', () => {
-  showPreviewImage(uploadFile);
-  openModal();
-});
-
-
 form.addEventListener('reset', defaultFormData);
 const hashtagsField = findElement(form, '.text__hashtags');
 
@@ -111,41 +105,48 @@ descriptionField.addEventListener('keydown', (evt) => {
   }
 });
 
-const onModalEscKeyDown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeModal();
-  }
-};
 const submitButton = findElement(form, '#upload-submit');
 
 const sliderElementValue = findElement(modalWindow, '.scale__control--value');
 
-function openModal() {
-  modalWindow.classList.remove('hidden');
-  document.body.classList.add('modal-open');
-  document.body.addEventListener('keydown', onModalEscKeyDown);
-  onElementClick(pictureCancel, closeModal);
-  onElementClick(scaleSmaller, minusScale);
-  onElementClick(scaleBigger, plusScale);
-  sliderElementValue.addEventListener('change', changeScale);
-  submitButton.focus();
-}
-
-export function closeModal() {
+export const closeModalForm = () => {
   modalWindow.classList.add('hidden');
   document.body.classList.remove('modal-open');
   document.body.removeEventListener('keydown', onModalEscKeyDown);
-  pictureCancel.removeEventListener('click', closeModal);
+  pictureCancel.removeEventListener('click', closeModalForm);
   scaleSmaller.removeEventListener('click', minusScale);
   scaleBigger.removeEventListener('click', plusScale);
   sliderElementValue.removeEventListener('change', changeScale);
   form.reset();
+};
+
+const openModalForm = () => {
+  modalWindow.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.body.addEventListener('keydown', onModalEscKeyDown);
+  onElementClick(pictureCancel, closeModalForm);
+  onElementClick(scaleSmaller, minusScale);
+  onElementClick(scaleBigger, plusScale);
+  sliderElementValue.addEventListener('change', changeScale);
+  submitButton.focus();
+};
+
+function onModalEscKeyDown(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeModalForm();
+  }
 }
+
+uploadFile.addEventListener('change', () => {
+  showPreviewImage(uploadFile);
+  openModalForm();
+});
+
 
 pictureCancel.addEventListener('keydown', (evt) => {
   if (isEnterKey(evt)) {
-    closeModal();
+    closeModalForm();
   }
 });
 
@@ -197,13 +198,13 @@ export const setUserFormSubmit = (onSuccess, onError) => {
       blockSubmitButton();
       sendData(
         () => {
-          closeModal();
+          closeModalForm();
           unblockSubmitButton();
           renderMessage('success', findElement(findElement(document, '#success').content, '.success'));
           form.reset();
         },
         () => {
-          closeModal();
+          closeModalForm();
           unblockSubmitButton();
           renderMessage('error', findElement(findElement(document, '#error').content, '.error'));
         },

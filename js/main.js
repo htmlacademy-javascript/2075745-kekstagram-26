@@ -1,11 +1,11 @@
 import { getData } from './api.js';
-import { closeModal, setUserFormSubmit } from './form.js';
+import { closeModalForm, setUserFormSubmit } from './form.js';
 import { getFilteredArray, setActiveFilterClick, filterSection } from './filter.js';
 import { findElement, debounce, showAlert } from './utils.js';
 import { DEBOUNCE_DEFAULT_DELAY } from './const.js';
 import { setupAllPhotos } from './data.js';
 
-setUserFormSubmit(closeModal, closeModal);
+setUserFormSubmit(closeModalForm, closeModalForm);
 
 getData(
   (messages) => {

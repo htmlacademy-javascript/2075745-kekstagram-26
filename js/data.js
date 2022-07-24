@@ -1,15 +1,15 @@
 import { getRandomAvatar, isEnterKey, onElementClick } from './utils.js';
-import { openModal } from './picture.js';
+import { openModalPicture } from './picture.js';
 import { AVATAR_COUNT } from './const.js';
 
 const setupElement = (photosElement, item) => {
   photosElement.id = `picture-${item.id}`;
   onElementClick(photosElement, () => {
-    openModal(item);
+    openModalPicture(item);
   });
   photosElement.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {
-      openModal(item);
+      openModalPicture(item);
     }
   });
   return photosElement;
