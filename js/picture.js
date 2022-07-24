@@ -1,10 +1,9 @@
-import { findElement, isEnterKey, isEscapeKey, isCharNumber, elementAddEventClick } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, onElementClick } from './utils.js';
 import { STEP_SHOW_COMMENTS } from './const.js';
 
 const modalWindow = findElement(document, '.big-picture'); // само окно
 const pictureImg = findElement(modalWindow, '.big-picture__img');
 const pictureCancel = findElement(modalWindow, '#picture-cancel');
-const socialCommentCount = findElement(modalWindow, '.social__comment-count');
 const commentsLoader = findElement(modalWindow, '.comments-loader');
 
 const onModalEscKeyDown = (evt) => {
@@ -16,26 +15,27 @@ const onModalEscKeyDown = (evt) => {
 
 export function openModal(image) {
   modalWindow.classList.remove('hidden');
-  const body = findElement(document, 'body');
-  body.classList.add('modal-open');
+  document.body.classList.add('modal-open');
   renderPicture(findElement(pictureImg, 'img'), image);
-  body.addEventListener('keydown', onModalEscKeyDown);
+  document.body.addEventListener('keydown', onModalEscKeyDown);
   pictureCancel.focus();
 }
 
 function closeModal() {
   modalWindow.classList.add('hidden');
-  const body = findElement(document, 'body');
-  body.classList.remove('modal-open');
-  body.removeEventListener('keydown', onModalEscKeyDown);
+  document.body.classList.remove('modal-open');
+  document.body.removeEventListener('keydown', onModalEscKeyDown);
 }
 
 let countShownComments = 0;
 
-function show5Comments() {
+const showCommentsCount = findElement(document, '#show-comments-count');
+
+const show5Comments = () => {
   const commentsCount = findElement(modalWindow, '.comments-count');
   const sumComments = +commentsCount.textContent;
   const socialComments = findElement(document, '.social__comments');
+
   if (sumComments - countShownComments <= 0) {
     for (let i = 0; i < socialComments.children.length; i++) {
       socialComments.children[i].classList.add('hidden');
@@ -58,32 +58,24 @@ function show5Comments() {
       commentsLoader.classList.remove('hidden');
     }
   }
+  showCommentsCount.textContent = countShownComments;
+};
 
-  // Установка количества показанных комментариев
-  let strTemp = socialCommentCount.innerHTML;
-  let j = 0;
-  while (isCharNumber(strTemp[j])) {
-    j++;
-  }
-  strTemp = strTemp.slice(j);
-  socialCommentCount.innerHTML = countShownComments + strTemp;
-}
-
-function setupLikes(likesCount, row) {
+const setupLikes = (likesCount, row) => {
   likesCount.textContent = row.likes;
-}
+};
 
-function setupSocialPicture(socialPicture, row) {
+const setupSocialPicture = (socialPicture, row) => {
   socialPicture.src = row.avatar;
-}
+};
 
-function setupSocialCaption(socialCaption, row) {
+const setupSocialCaption = (socialCaption, row) => {
   socialCaption.textContent = row.description;
-}
+};
 
-function setupCommentsCount(commentsCount, row) {
+const setupCommentsCount = (commentsCount, row) => {
   commentsCount.textContent = row.comments.length;
-}
+};
 
 // перерисовка новой картинки
 function renderPicture(picture, image) {
@@ -99,13 +91,13 @@ function renderPicture(picture, image) {
   const oneSocialComment = findElement(socialComments, '.social__comment');
   const templateCommentFragment = document.createDocumentFragment();
 
-  function setupAvatar(avatar, row) {
+  const setupAvatar = (avatar, row) => {
     avatar.src = row.avatar;
     avatar.alt = row.name;
-  }
-  function setupMessage(message, row) {
+  };
+  const setupMessage = (message, row) => {
     message.textContent = row.message;
-  }
+  };
   image.comments.forEach((comments) => {
     const templateSocialComment = oneSocialComment.cloneNode(true);
     templateSocialComment.classList.add('hidden');
@@ -120,11 +112,12 @@ function renderPicture(picture, image) {
     }
     socialComments.appendChild(templateCommentFragment);
   }
+
   countShownComments = 0;
   show5Comments();
   commentsLoader.onclick = show5Comments;
 
-  elementAddEventClick(pictureCancel, closeModal);
+  onElementClick(pictureCancel, closeModal);
 
   pictureCancel.addEventListener('keydown', (evt) => {
     if (isEnterKey(evt)) {

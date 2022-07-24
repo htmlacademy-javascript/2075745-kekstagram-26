@@ -1,9 +1,5 @@
-import { findElement, getShuffleArray } from './utils.js';
-
-// Количество картинок для загрузки
-const COUNT_PICTURES = 25;
-// Количество картинок для фильтра "10 случайных"
-const COUNT_RANDOM_PICTURES = 10;
+import { findElement, getShuffleArray, onElementClick } from './utils.js';
+import { COUNT_PICTURES, COUNT_RANDOM_PICTURES, CLASS_ACTIVE_FILTER } from './const.js';
 
 export const filterSection = findElement(document, '.img-filters');
 let activeFilter = findElement(filterSection, '.img-filters__button--active');
@@ -13,9 +9,8 @@ export const compareCommentsLength = (img1, img2) => img2.comments.length - img1
 
 // Выбор фильтра
 export const setActiveFilterClick = (callback) => {
-  filterSection.addEventListener('click', (evt) => {
+  onElementClick(filterSection, (evt) => {
     if (evt.target.nodeName === 'BUTTON') {
-      const CLASS_ACTIVE_FILTER = 'img-filters__button--active';
       if (!evt.target.classList.contains(CLASS_ACTIVE_FILTER)) {
         activeFilter.classList.remove(CLASS_ACTIVE_FILTER);
         evt.target.classList.add(CLASS_ACTIVE_FILTER);

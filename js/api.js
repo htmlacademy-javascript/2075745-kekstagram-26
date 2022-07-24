@@ -1,5 +1,7 @@
+import { GET_DATA_SERVER, POST_DATA_SERVER } from './const.js';
+
 export const getData = (onSuccess, onFail) => {
-  fetch('https://26.javascript.pages.academy/kekstagram/data')
+  fetch(GET_DATA_SERVER)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -18,7 +20,7 @@ export const getData = (onSuccess, onFail) => {
 
 export const sendData = (onSuccess, onFail, body) => {
   fetch(
-    'https://26.javascript.pages.academy/kekstagram',
+    POST_DATA_SERVER,
     {
       method: 'POST',
       body,

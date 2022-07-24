@@ -1,7 +1,7 @@
-import { findElement, isEnterKey, isEscapeKey, elementAddEventClick } from './utils.js';
+import { findElement, isEnterKey, isEscapeKey, onElementClick } from './utils.js';
 import { sendData } from './api.js';
 import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
-import { TYPES_OF_FILE, HASHTAG_RULE, MAX_COUNT_HASHTAGS, MAX_LENGTH_DESCRIPTION } from './const.js';
+import { TYPES_OF_FILE, HASHTAG_RULE, MAX_COUNT_HASHTAGS, MIN_LENGTH_HASHTAG, MAX_LENGTH_DESCRIPTION, MAX_LENGTH_HASHTAG } from './const.js';
 
 export const showPreviewImage = (input) => {
   const file = input.files[0];
@@ -27,7 +27,6 @@ const pictureCancel = findElement(modalWindow, '#upload-cancel');
 const form = findElement(document, '#upload-select-image');
 form.addEventListener('reset', defaultFormData);
 const hashtagsField = findElement(form, '.text__hashtags');
-// const pristine = new Pristine(form);
 
 const pristine = new Pristine(form, {
   classTo: 'text__label',
@@ -40,15 +39,10 @@ const pristine = new Pristine(form, {
 
 const getArrayFromString = (value) => value.toLowerCase().split(' ').filter(String);
 
-const validateHashtags = (value) => {
-  // при пустом поле возвращаем true
-  if (value.length === 0) {
-    return true;
+const minLength = (arr) => {
+  if (arr.length === 0) {
+    return false;
   }
-  return getArrayFromString(value).every((it) => HASHTAG_RULE.test(it));
-};
-
-const minLength = function (arr) {
   let min = Number.MAX_VALUE;
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].length < min) {
@@ -58,8 +52,11 @@ const minLength = function (arr) {
   return min;
 };
 
-const maxLength = function (arr) {
-  let max = Number.EPSILON;
+const maxLength = (arr) => {
+  if (arr.length === 0) {
+    return false;
+  }
+  let max = 0;
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].length > max) {
       max = arr[i].length;
@@ -68,39 +65,27 @@ const maxLength = function (arr) {
   return max;
 };
 
+const validateHashtags = (value) => (value.length === 0) ? true : getArrayFromString(value).every((item) => HASHTAG_RULE.test(item));
 const checkHashtagCount = (value) => (getArrayFromString(value).length <= MAX_COUNT_HASHTAGS);
-const checkHashtagLengthMin = (value) => (getArrayFromString(value).length === 0 || minLength(getArrayFromString(value)) >= 2);
-const checkHashtagLengthMax = (value) => (maxLength(getArrayFromString(value)) <= 20);
+const checkHashtagLengthMin = (value) => (getArrayFromString(value).length === 0 || minLength(getArrayFromString(value)) >= MIN_LENGTH_HASHTAG);
+const checkHashtagLengthMax = (value) => (maxLength(getArrayFromString(value)) <= MAX_LENGTH_HASHTAG);
 const checkDuplicate = (array) => [...new Set(array)].length === array.length;
 const checkHashtagRepeat = (value) => checkDuplicate(getArrayFromString(value));
+const checkes = [
+  { check: validateHashtags, message: 'Хештеги начинаются с #, разделяются пробелом' },
+  { check: checkHashtagCount, message: `Количество тегов больше ${MAX_COUNT_HASHTAGS}` },
+  { check: checkHashtagLengthMin, message: `Длина тега меньше ${MIN_LENGTH_HASHTAG}` },
+  { check: checkHashtagLengthMax, message: `Длина тега больше ${MAX_LENGTH_HASHTAG}, включая #` },
+  { check: checkHashtagRepeat, message: 'Повторяющиеся теги' }
+];
 
-pristine.addValidator(
-  hashtagsField,
-  validateHashtags,
-  'Хештеги начинаются с #, разделяются пробелом'
-);
-
-pristine.addValidator(
-  hashtagsField,
-  checkHashtagCount,
-  `Количество тегов больше ${MAX_COUNT_HASHTAGS}`
-);
-
-pristine.addValidator(
-  hashtagsField,
-  checkHashtagLengthMin,
-  'Длина тега меньше 2'
-);
-pristine.addValidator(
-  hashtagsField,
-  checkHashtagLengthMax,
-  'Длина тега больше 20, включая #'
-);
-pristine.addValidator(
-  hashtagsField,
-  checkHashtagRepeat,
-  'Повторяющиеся теги'
-);
+for (let i = 0; i < checkes.length; i++) {
+  pristine.addValidator(
+    hashtagsField,
+    checkes[i].check,
+    checkes[i].message
+  );
+}
 
 hashtagsField.addEventListener('keydown', (evt) => {
   if (isEscapeKey) {
@@ -108,13 +93,13 @@ hashtagsField.addEventListener('keydown', (evt) => {
   }
 });
 
-const validateDescription = (value) => value.length <= MAX_LENGTH_DESCRIPTION;
+const checkDescription = (value) => value.length <= MAX_LENGTH_DESCRIPTION;
 
 const descriptionField = findElement(form, '.text__description');
 
 pristine.addValidator(
   descriptionField,
-  validateDescription,
+  checkDescription,
   `Превышена максимальная длина описания ${MAX_LENGTH_DESCRIPTION}`
 );
 
@@ -132,26 +117,26 @@ const onModalEscKeyDown = (evt) => {
 };
 const submitButton = findElement(form, '#upload-submit');
 
-const body = findElement(document, 'body');
+onElementClick(findElement(modalWindow, '#upload-cancel'), closeModal);
+onElementClick(findElement(modalWindow, '.scale__control--smaller'), minusScale);
+onElementClick(findElement(modalWindow, '.scale__control--bigger'), plusScale);
+const sliderElementValue = findElement(modalWindow, '.scale__control--value');
+
 function openModal() {
   modalWindow.classList.remove('hidden');
-  body.classList.add('modal-open');
-  body.addEventListener('keydown', onModalEscKeyDown);
+  document.body.classList.add('modal-open');
+  document.body.addEventListener('keydown', onModalEscKeyDown);
 
-  elementAddEventClick(findElement(modalWindow, '#upload-cancel'), closeModal);
-  elementAddEventClick(findElement(modalWindow, '.scale__control--smaller'), minusScale);
-  elementAddEventClick(findElement(modalWindow, '.scale__control--bigger'), plusScale);
-
-  const sliderElementValue = findElement(document, '.scale__control--value');
   sliderElementValue.onchange = changeScale;
   submitButton.focus();
 }
 
 export function closeModal() {
   modalWindow.classList.add('hidden');
-  body.classList.remove('modal-open');
-  body.removeEventListener('keydown', onModalEscKeyDown);
+  document.body.classList.remove('modal-open');
+  document.body.removeEventListener('keydown', onModalEscKeyDown);
   uploadFile.value = '';
+  form.reset();
 }
 
 pictureCancel.addEventListener('keydown', (evt) => {
@@ -180,13 +165,13 @@ const renderMessage = (typeError, template) => {
     document.removeEventListener('keydown', callEventKeyboard);
   };
 
-  message.addEventListener('click', (evt) => {
+  onElementClick(message, (evt) => {
     if (evt.target.classList.contains(typeError)) {
       closeMessage();
     }
   });
 
-  button.addEventListener('click', closeMessage);
+  onElementClick(button, closeMessage);
   document.addEventListener('keydown', callEventKeyboard);
 
   function callEventKeyboard(evt) {
@@ -197,7 +182,7 @@ const renderMessage = (typeError, template) => {
   }
 
   messageFragment.appendChild(message);
-  body.appendChild(messageFragment);
+  document.body.appendChild(messageFragment);
 };
 
 export const setUserFormSubmit = (onSuccess, onError) => {
@@ -208,13 +193,13 @@ export const setUserFormSubmit = (onSuccess, onError) => {
       blockSubmitButton();
       sendData(
         () => {
-          onSuccess();
+          closeModal();
           unblockSubmitButton();
           renderMessage('success', findElement(findElement(document, '#success').content, '.success'));
           form.reset();
         },
         () => {
-          onError();
+          closeModal();
           unblockSubmitButton();
           renderMessage('error', findElement(findElement(document, '#error').content, '.error'));
         },

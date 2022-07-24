@@ -1,10 +1,10 @@
-import { getRandomAvatar, isEnterKey } from './utils.js';
+import { getRandomAvatar, isEnterKey, onElementClick } from './utils.js';
 import { openModal } from './picture.js';
 import { AVATAR_COUNT } from './const.js';
 
-function setupElement(photosElement, item) {
+const setupElement = (photosElement, item) => {
   photosElement.id = `picture-${item.id}`;
-  photosElement.addEventListener('click', () => {
+  onElementClick(photosElement, () => {
     openModal(item);
   });
   photosElement.addEventListener('keydown', (evt) => {
@@ -13,21 +13,22 @@ function setupElement(photosElement, item) {
     }
   });
   return photosElement;
-}
+};
 
-function setupPicture(pictureImg, row) {
+const setupPicture = (pictureImg, row) => {
   setupElement(pictureImg, row);
   pictureImg.src = row.url;
   pictureImg.alt = row.description;
-}
+  pictureImg.loading = 'lazy';
+};
 
-function setupComments(pictureComments, row) {
+const setupComments = (pictureComments, row) => {
   pictureComments.textContent = row.comments.length;
-}
+};
 
-function setupLikes(pictureLikes, row) {
+const setupLikes = (pictureLikes, row) => {
   pictureLikes.textContent = row.likes;
-}
+};
 
 const setupItem = (container, item) => {
 
