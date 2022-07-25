@@ -1,6 +1,6 @@
 import { findElement, isEnterKey, isEscapeKey, onElementClick } from './utils.js';
 import { sendData } from './api.js';
-import { minusScale, plusScale, changeScale, defaultFormData } from './slider.js';
+import { minusScale, plusScale, changeScale as onChangeScale, defaultFormData as onResetForm } from './slider.js';
 import { TYPES_OF_FILE, HASHTAG_RULE, MAX_COUNT_HASHTAGS, MIN_LENGTH_HASHTAG, MAX_LENGTH_DESCRIPTION, MAX_LENGTH_HASHTAG } from './const.js';
 
 const form = findElement(document, '#upload-select-image');
@@ -21,7 +21,7 @@ export const showPreviewImage = (input) => {
   }
 };
 
-form.addEventListener('reset', defaultFormData);
+form.addEventListener('reset', onResetForm);
 const hashtagsField = findElement(form, '.text__hashtags');
 
 const pristine = new Pristine(form, {
@@ -116,7 +116,7 @@ export const closeModalForm = () => {
   pictureCancel.removeEventListener('click', closeModalForm);
   scaleSmaller.removeEventListener('click', minusScale);
   scaleBigger.removeEventListener('click', plusScale);
-  sliderElementValue.removeEventListener('change', changeScale);
+  sliderElementValue.removeEventListener('change', onChangeScale);
   form.reset();
 };
 
@@ -127,7 +127,7 @@ const openModalForm = () => {
   onElementClick(pictureCancel, closeModalForm);
   onElementClick(scaleSmaller, minusScale);
   onElementClick(scaleBigger, plusScale);
-  sliderElementValue.addEventListener('change', changeScale);
+  sliderElementValue.addEventListener('change', onChangeScale);
   submitButton.focus();
 };
 
@@ -168,7 +168,7 @@ const renderMessage = (typeError) => {
 
   const closeMessage = () => {
     message.remove();
-    document.removeEventListener('keydown', callEventKeyboard);
+    document.removeEventListener('keydown', onKeydown);
   };
 
   onElementClick(message, (evt) => {
@@ -178,9 +178,9 @@ const renderMessage = (typeError) => {
   });
 
   onElementClick(button, closeMessage);
-  document.addEventListener('keydown', callEventKeyboard);
+  document.addEventListener('keydown', onKeydown);
 
-  function callEventKeyboard(evt) {
+  function onKeydown(evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       closeMessage();
